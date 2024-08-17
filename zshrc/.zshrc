@@ -150,6 +150,12 @@ eval "$(/opt/homebrew/bin/brew shellenv)"
 
 source <(fzf --zsh)
 
+# source everything we don't want to commit
+# # ie credentials and work stuff
+for file in ~/.ignore_*; do
+    source "$file"
+done
+
 if command -v pyenv 1>/dev/null 2>&1; then
   eval "$(pyenv init -)"
 fi

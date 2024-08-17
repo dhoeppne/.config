@@ -5,9 +5,6 @@ gh
 github-copilot
 iterm2
 jgit
-#lvim
-#nvim
 starship
-#wezterm
 yarn
-#zim
+*ignore*
