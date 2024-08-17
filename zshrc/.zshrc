@@ -152,7 +152,7 @@ source <(fzf --zsh)
 
 # source everything we don't want to commit
 # # ie credentials and work stuff
-for file in ~/.ignore_*; do
+for file in $HOME/.config/.ignore_*; do
     source "$file"
 done
 
@@ -187,7 +187,6 @@ check_nvm
 
 export GOPATH=$(go env GOPATH)
 export PATH=$PATH:$(go env GOPATH)/bin
-export GHE_TOKEN="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" # for homebrew
 
 alias c=code
 
