@@ -1,0 +1,6 @@
+function check_nvm {
+    FILE=.nvmrc
+    if test -f "$FILE"; then
+        nvm use > /dev/null 2>&1
+    fi
+}

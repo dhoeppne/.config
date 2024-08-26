@@ -153,11 +153,32 @@ source <(fzf --zsh)
 # source everything we don't want to commit
 # # ie credentials and work stuff
 for file in $HOME/.config/zshrc/.ignore_*; do
-    echo "Sourcing $file"
     source "$file"
 done
 
-# lazy load
+if command -v pyenv 1>/dev/null 2>&1; then
+  eval "$(pyenv init -)"
+fi
+
+alias gc-="git checkout -"
+
+alias nvm="fnm"
+eval "$(fnm env --use-on-cd --shell zsh)"
+
+export GOPATH=$(go env GOPATH)
+export PATH=$PATH:$(go env GOPATH)/bin
+
+alias c=code
+
+source $HOME/personal/fast-syntax-highlighting/fast-syntax-highlighting.plugin.zsh
+
+export EDITOR="nvim"
+
+[[ $commands[kubectl] ]] && source <(kubectl completion zsh)
+
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+
+# lazy load near end of file
 () {
     # add our local functions dir to the fpath
     local funcs=$HOME/.config/zshrc/functions
@@ -176,54 +197,6 @@ done
         autoload ${=$(cd "$work_funcs" && echo *)}
     fi
 }
-
-# FPATH="$HOME/.config/zshrc/functions:$FPATH"
-# FPATH="$HOME/.config/zshrc/ignore_functions:$FPATH"
-# autoload -Uz $HOME/.config/zshrc/functions/**/*
-# autoload -Uz $HOME/.config/zshrc/ignore_functions/**/*
-
-if command -v pyenv 1>/dev/null 2>&1; then
-  eval "$(pyenv init -)"
-fi
-
-alias gc-="git checkout -"
-
-function editrc() {
-  nvim ~/.zshrc
-}
-
-function newz() {
-  exec zsh
-}
-
-alias nvm="fnm"
-eval "$(fnm env --use-on-cd --shell zsh)"
-function check_nvm {
-    FILE=.nvmrc
-    if test -f "$FILE"; then
-        nvm use > /dev/null 2>&1
-    fi
-}
-
-# Check for nvm file whenever we switch directories (overrides system default behavior):
-function cd {
-    builtin cd "$@" && check_nvm
-}
-
-# Also check nvm when we open our shell (usefull in vs code terminals)
-check_nvm
-
-export GOPATH=$(go env GOPATH)
-export PATH=$PATH:$(go env GOPATH)/bin
-
-alias c=code
-
-source $HOME/personal/fast-syntax-highlighting/fast-syntax-highlighting.plugin.zsh
-
-export EDITOR="nvim"
-
-[[ $commands[kubectl] ]] && source <(kubectl completion zsh)
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 
 #THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
 export SDKMAN_DIR="$HOME/.sdkman"
