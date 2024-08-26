@@ -152,13 +152,41 @@ source <(fzf --zsh)
 
 # source everything we don't want to commit
 # # ie credentials and work stuff
-for file in $HOME/.config/.ignore_*; do
+for file in $HOME/.config/zshrc/.ignore_*; do
+    echo "Sourcing $file"
     source "$file"
 done
+
+# lazy load
+() {
+    # add our local functions dir to the fpath
+    local funcs=$HOME/.config/zshrc/functions
+    local work_funcs=$HOME/.config/zshrc/ignore_functions
+
+    # FPATH is already tied to fpath, but this adds
+    # a uniqueness constraint to prevent duplicate entries
+    typeset -TUg +x FPATH=$funcs:$FPATH fpath
+    typeset -TUg +x FPATH=$work_funcs:$FPATH fpath
+
+    # Now autoload them
+    if [[ -d $funcs ]]; then
+        autoload ${=$(cd "$funcs" && echo *)}
+    fi
+    if [[ -d $work_funcs ]]; then
+        autoload ${=$(cd "$work_funcs" && echo *)}
+    fi
+}
+
+# FPATH="$HOME/.config/zshrc/functions:$FPATH"
+# FPATH="$HOME/.config/zshrc/ignore_functions:$FPATH"
+# autoload -Uz $HOME/.config/zshrc/functions/**/*
+# autoload -Uz $HOME/.config/zshrc/ignore_functions/**/*
 
 if command -v pyenv 1>/dev/null 2>&1; then
   eval "$(pyenv init -)"
 fi
+
+alias gc-="git checkout -"
 
 function editrc() {
   nvim ~/.zshrc
