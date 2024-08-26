@@ -150,12 +150,6 @@ eval "$(/opt/homebrew/bin/brew shellenv)"
 
 source <(fzf --zsh)
 
-# source everything we don't want to commit
-# # ie credentials and work stuff
-for file in $HOME/.config/zshrc/.ignore_*; do
-    source "$file"
-done
-
 if command -v pyenv 1>/dev/null 2>&1; then
   eval "$(pyenv init -)"
 fi
@@ -197,6 +191,13 @@ export EDITOR="nvim"
         autoload ${=$(cd "$work_funcs" && echo *)}
     fi
 }
+
+# source everything we don't want to commit
+# keep this near the end to make troubleshooting easier
+# # ie credentials and work stuff
+for file in $HOME/.config/zshrc/.ignore_*; do
+    source "$file"
+done
 
 #THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
 export SDKMAN_DIR="$HOME/.sdkman"
