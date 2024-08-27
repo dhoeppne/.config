@@ -1,0 +1,10 @@
+zmodule duration-info
+zmodule zsh-users/zsh-completions --fpath src
+zmodule zsh-users/zsh-autosuggestions
+zmodule romkatv/powerlevel10k --use degit
+zmodule zsh-users/zsh-history-substring-search
+zmodule zdharma-continuum/fast-syntax-highlighting -s 'fast-syntax-highlighting.plugin.zsh' -f '.'
+zmodule zshzoo/magic-enter
+zmodule mfaerevaag/wd -s 'wd.plugin.zsh' -f '.'
+zmodule marlonrichert/zsh-autocomplete -s 'zsh-autocomplete.plugin.zsh' -f '.'
+zmodule completion
