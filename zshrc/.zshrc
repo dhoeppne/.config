@@ -129,8 +129,6 @@ export EDITOR="nvim"
 
 [[ $commands[kubectl] ]] && source <(kubectl completion zsh)
 
-# [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
-
 # load git aliases
 source $HOME/.config/zshrc/git_aliases
 
