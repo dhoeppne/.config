@@ -29,3 +29,8 @@ fi
 if ! git config --global --get alias.l > /dev/null; then
   git config --global alias.l pull
 fi
+
+# Check if alias 'l' exists, if not, set it
+if ! git config --global --get alias.p > /dev/null; then
+  git config --global alias.p push
+fi
