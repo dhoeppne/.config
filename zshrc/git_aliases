@@ -1,0 +1,31 @@
+alias g='git'
+
+# Check if alias 'co' exists, if not, set it
+if ! git config --global --get alias.co > /dev/null; then
+  git config --global alias.co checkout
+fi
+
+# Check if alias 'b' exists, if not, set it
+if ! git config --global --get alias.b > /dev/null; then
+  git config --global alias.b branch
+fi
+
+# Check if alias 'cm' exists, if not, set it
+if ! git config --global --get alias.cm > /dev/null; then
+  git config --global alias.cm 'commit -m'
+fi
+
+# Check if alias 'co-' exists, if not, set it
+if ! git config --global --get alias.co- > /dev/null; then
+  git config --global alias.co- 'checkout -'
+fi
+
+# Check if alias 'com' exists, if not, set it
+if ! git config --global --get alias.com > /dev/null; then
+  git config --global alias.com '!f() { git checkout $(git config --get init.defaultBranch); }; f'
+fi
+
+# Check if alias 'l' exists, if not, set it
+if ! git config --global --get alias.l > /dev/null; then
+  git config --global alias.l pull
+fi

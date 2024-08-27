@@ -100,14 +100,12 @@ if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]
   source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
 fi
 
-# source /opt/homebrew/share/zsh-autocomplete/zsh-autocomplete.plugin.zsh
-
 export PATH=/usr/local/bin:$PATH
 export PATH="$HOME/.local/bin:$PATH"
 
 # magic-enter defaults
-# zstyle -s ':zshzoo:magic-enter' command 'ls -laFh .'
-# zstyle -s ':zshzoo:magic-enter' git-command 'git status -u .'
+MAGIC_ENTER_GIT_COMMAND='git status -u .'
+MAGIC_ENTER_OTHER_COMMAND='ls -lh .'
 
 # Set PATH, MANPATH, etc., for Homebrew.
 eval "$(/opt/homebrew/bin/brew shellenv)"
@@ -118,23 +116,23 @@ if command -v pyenv 1>/dev/null 2>&1; then
   eval "$(pyenv init -)"
 fi
 
-alias gc-="git checkout -"
-
+# load a faster nvm
 alias nvm="fnm"
-eval "$(fnm env --use-on-cd --shell zsh)"
+eval "$(fnm env --version-file-strategy=recursive --use-on-cd --shell zsh)"
 
 export GOPATH=$(go env GOPATH)
 export PATH=$PATH:$(go env GOPATH)/bin
 
 alias c=code
 
-# source $HOME/.config/fsh/fast-syntax-highlighting.plugin.zsh
-
 export EDITOR="nvim"
 
 [[ $commands[kubectl] ]] && source <(kubectl completion zsh)
 
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+# [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+
+# load git aliases
+source $HOME/.config/zshrc/git_aliases
 
 # lazy load near end of file
 () {

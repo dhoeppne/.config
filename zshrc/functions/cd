@@ -1,4 +1,0 @@
-# Check for nvm file whenever we switch directories (overrides system default behavior):
-function cd {
-    builtin cd "$@" && check_nvm
-}
