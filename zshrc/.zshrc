@@ -155,9 +155,11 @@ source $HOME/.config/zshrc/git_aliases
 # source everything we don't want to commit
 # keep this near the end to make troubleshooting easier
 # # ie credentials and work stuff
-for file in $HOME/.config/zshrc/.IGNORE_*; do
-    source "$file"
-done
+if [[ -d $HOME/.config/zshrc/.IGNORE_* ]]; then
+    for file in $HOME/.config/zshrc/.IGNORE_*; do
+        source "$file"
+    done
+fi
 
 #THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
 export SDKMAN_DIR="$HOME/.sdkman"
