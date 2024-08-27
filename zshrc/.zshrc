@@ -155,7 +155,7 @@ source $HOME/.config/zshrc/git_aliases
 # source everything we don't want to commit
 # keep this near the end to make troubleshooting easier
 # # ie credentials and work stuff
-for file in $HOME/.config/zshrc/.ignore_*; do
+for file in $HOME/.config/zshrc/.IGNORE_*; do
     source "$file"
 done
 
