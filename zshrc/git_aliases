@@ -34,3 +34,7 @@ fi
 if ! git config --global --get alias.p > /dev/null; then
   git config --global alias.p push
 fi
+
+if ! git config --global --get alias.a > /dev/null; then
+  git config --global alias.a add
+fi

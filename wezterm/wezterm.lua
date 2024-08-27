@@ -13,9 +13,9 @@ config.leader = { key = "F", mods = "CMD|SHIFT", timeout_milliseconds = 1000 }
 
 -- This is where you actually apply your config choices
 if appearance.is_dark() then
-	config.color_scheme = "Tokyo Night Storm"
+	config.color_scheme = "Tokyo Night"
 else
-	config.color_scheme = "Tokyo Night Day"
+	config.color_scheme = "Tokyo Night"
 end
 
 config.font = wezterm.font({ family = "Fira Code" })
