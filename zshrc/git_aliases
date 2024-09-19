@@ -38,3 +38,7 @@ fi
 if ! git config --global --get alias.a > /dev/null; then
   git config --global alias.a add
 fi
+
+if ! git config --global --get alias.cl > /dev/null; then
+  git config --global alias.cl clone
+fi

@@ -112,18 +112,12 @@ eval "$(/opt/homebrew/bin/brew shellenv)"
 
 source <(fzf --zsh)
 
-if command -v pyenv 1>/dev/null 2>&1; then
-  eval "$(pyenv init -)"
-fi
-
-# load a faster nvm
-alias nvm="fnm"
-eval "$(fnm env --version-file-strategy=recursive --use-on-cd --shell zsh)"
-
 export GOPATH=$(go env GOPATH)
 export PATH=$PATH:$(go env GOPATH)/bin
 
 alias c=code
+# we lazy load this later, but its nice to keep it with the other aliases
+alias nvm="fnm"
 
 export EDITOR="nvim"
 
@@ -155,15 +149,24 @@ source $HOME/.config/zshrc/git_aliases
 # source everything we don't want to commit
 # keep this near the end to make troubleshooting easier
 # # ie credentials and work stuff
-if [[ -d $HOME/.config/zshrc/.IGNORE_* ]]; then
+if ls $HOME/.config/zshrc/.IGNORE_* 1> /dev/null 2>&1; then
     for file in $HOME/.config/zshrc/.IGNORE_*; do
-        source "$file"
+        source $file
     done
 fi
 
-#THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
+# use qooman/lazy-load to load slow env managers
 export SDKMAN_DIR="$HOME/.sdkman"
-[[ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]] && source "$HOME/.sdkman/bin/sdkman-init.sh"
+if [[ "$SHELL" =~ "zsh" ]] && command -v lazyload >/dev/null; then
+  lazyload sdk -- 'source "$SDKMAN_DIR/bin/sdkman-init.sh"'
+
+  if command -v pyenv 1>/dev/null 2>&1; then
+    lazyload pyenv -- 'eval "$(pyenv init -)"'
+  fi
+
+  # load a faster nvm
+  lazyload nvm -- 'eval "$(fnm env --version-file-strategy=recursive --use-on-cd --shell zsh)"'
+fi
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f $HOME/.config/p10k/.p10k.zsh ]] || source $HOME/.config/p10k/.p10k.zsh

@@ -3,6 +3,7 @@ zmodule zsh-users/zsh-completions --fpath src
 zmodule zsh-users/zsh-autosuggestions
 zmodule romkatv/powerlevel10k --use degit
 zmodule zsh-users/zsh-history-substring-search
+zmodule qoomon/zsh-lazyload -s 'zsh-lazyload.plugin.zsh' -f '.'
 zmodule zdharma-continuum/fast-syntax-highlighting -s 'fast-syntax-highlighting.plugin.zsh' -f '.'
 zmodule zap-zsh/magic-enter -s 'magic-enter.plugin.zsh' -f '.'
 zmodule mfaerevaag/wd -s 'wd.plugin.zsh' -f '.'
