@@ -58,6 +58,7 @@ ZSH_AUTOSUGGEST_MANUAL_REBIND=1
 # ------------------
 
 ZIM_CONFIG_FILE=$HOME/.config/zim/.zimrc
+# i don't bother creating a zdotdir as all my config is in the .zimrc in this repo
 ZIM_HOME=${ZDOTDIR:-${HOME}}/.zim
 # Download zimfw plugin manager if missing.
 if [[ ! -e ${ZIM_HOME}/zimfw.zsh ]]; then
