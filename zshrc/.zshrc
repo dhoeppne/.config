@@ -167,8 +167,8 @@ if [[ "$SHELL" =~ "zsh" ]] && command -v lazyload >/dev/null; then
 fi
 
 # use goarano/zsh-lazy-load to lazy load some completions
-_lazy_load kubectl "kubectl completion zsh"
-_lazy_load rustup "rustup completions zsh"
+_lazy_load kubectl "[[ $commands[kubectl] ]] && source <(kubectl completions zsh)"
+_lazy_load rustup "rustup completions zsh > ~/.zfunc/_rustup"
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f $HOME/.config/p10k/.p10k.zsh ]] || source $HOME/.config/p10k/.p10k.zsh
