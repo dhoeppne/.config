@@ -108,24 +108,18 @@ export PATH="$HOME/.local/bin:$PATH"
 MAGIC_ENTER_GIT_COMMAND='git status -u .'
 MAGIC_ENTER_OTHER_COMMAND='ls -lh .'
 
-# Set PATH, MANPATH, etc., for Homebrew.
-eval "$(/opt/homebrew/bin/brew shellenv)"
-
 source <(fzf --zsh)
 
-export GOPATH=$(go env GOPATH)
-export PATH=$PATH:$(go env GOPATH)/bin
+export GOPATH=$HOME/go
+export PATH=$PATH:$HOME/go/bin
 
 alias c=code
 # we lazy load this later, but its nice to keep it with the other aliases
 alias nvm="fnm"
-
-export EDITOR="nvim"
-
-[[ $commands[kubectl] ]] && source <(kubectl completion zsh)
-
 # load git aliases
 source $HOME/.config/zshrc/git_aliases
+
+export EDITOR="nvim"
 
 # lazy load near end of file
 () {
@@ -167,7 +161,14 @@ if [[ "$SHELL" =~ "zsh" ]] && command -v lazyload >/dev/null; then
 
   # load a faster nvm
   lazyload nvm -- 'eval "$(fnm env --version-file-strategy=recursive --use-on-cd --shell zsh)"'
+
+  # Set PATH, MANPATH, etc., for Homebrew.
+  lazyload brew -- 'eval "$(/opt/homebrew/bin/brew shellenv)"'
 fi
+
+# use goarano/zsh-lazy-load to lazy load some completions
+_lazy_load kubectl "kubectl completion zsh"
+_lazy_load rustup "rustup completions zsh"
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f $HOME/.config/p10k/.p10k.zsh ]] || source $HOME/.config/p10k/.p10k.zsh
