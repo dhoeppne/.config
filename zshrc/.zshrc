@@ -113,9 +113,12 @@ source <(fzf --zsh)
 export GOPATH=$HOME/go
 export PATH=$PATH:$HOME/go/bin
 
-alias c=code
-# we lazy load this later, but its nice to keep it with the other aliases
+# load a faster nvm
 alias nvm="fnm"
+eval "$(fnm env --version-file-strategy=recursive --use-on-cd --shell zsh)"
+
+alias c=code
+
 # load git aliases
 source $HOME/.config/zshrc/git_aliases
 
@@ -158,9 +161,6 @@ if [[ "$SHELL" =~ "zsh" ]] && command -v lazyload >/dev/null; then
   if command -v pyenv 1>/dev/null 2>&1; then
     lazyload pyenv -- 'eval "$(pyenv init -)"'
   fi
-
-  # load a faster nvm
-  lazyload nvm -- 'eval "$(fnm env --version-file-strategy=recursive --use-on-cd --shell zsh)"'
 
   # Set PATH, MANPATH, etc., for Homebrew.
   lazyload brew -- 'eval "$(/opt/homebrew/bin/brew shellenv)"'
