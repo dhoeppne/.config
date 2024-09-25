@@ -117,6 +117,9 @@ export PATH=$PATH:$HOME/go/bin
 alias nvm="fnm"
 eval "$(fnm env --version-file-strategy=recursive --use-on-cd --shell zsh)"
 
+# load zellij
+eval "$(zellij setup --generate-auto-start zsh)"
+alias z=zellij
 alias c=code
 
 # load git aliases
