@@ -114,18 +114,24 @@ export GOPATH=$HOME/go
 export PATH=$PATH:$HOME/go/bin
 
 # load a faster nvm
-alias nvm="fnm"
+alias nvm='fnm'
 eval "$(fnm env --version-file-strategy=recursive --use-on-cd --shell zsh)"
 
+# Check if zellij is installed, and if not, install it using Homebrew
+if ! command -v zellij &> /dev/null; then
+    echo 'zellij is not installed. Installing...'
+    brew install zellij
+fi
+
 # load zellij
-eval "$(zellij setup --generate-auto-start zsh)"
 alias z=zellij
 alias c=code
+alias yin='yarn install'
 
 # load git aliases
 source $HOME/.config/zshrc/git_aliases
 
-export EDITOR="nvim"
+export EDITOR='nvim'
 
 # lazy load near end of file
 () {
