@@ -1,0 +1,58 @@
+layout {
+  default_tab_template {
+    pane size=1 borderless=true {
+        plugin location="zellij:tab-bar"
+    }
+    children
+    pane size=2 borderless=true {
+      plugin location="zellij:status-bar"
+    }
+  }
+  tab_template name="strider_tab"  {
+    pane size=1 borderless=true {
+        plugin location="zellij:tab-bar"
+    }
+    pane split_direction="Vertical" {
+        pane size="15%" name="directory" cwd="/Users/david.hoeppner/code/space-flavor" {
+            plugin location="zellij:strider"
+        }
+        children
+    }
+    pane size=2 borderless=true {
+        plugin location="zellij:status-bar"
+    }
+  }
+  tab name="HOME (SERVICES)" split_direction="vertical" {
+    pane {
+      name "Home"
+      focus true
+      cwd "/Users/david.hoeppner/code/space-flavor"
+      command "yarn"
+      args "run:local" "-h" "--hot" "--cache"
+    }
+    pane split_direction="horizontal"{
+      pane {
+        name "Graphql"
+        cwd "/Users/david.hoeppner/code/space-flavor/graphql-service"
+        command "yarn"
+        args "run" "dev:integration"
+      }
+      pane {
+        name "Tunnel"
+        size "30%"
+        command "zsh"
+        args  "-c" "/Users/david.hoeppner/code/space-flavor/scripts/local/local-suv-dev.sh -c -g $(canyonero hostname)"
+      }
+    }
+  }
+  strider_tab name="HOME (client)" focus=true {
+    pane name="client" cwd="/Users/david.hoeppner/code/space-flavor" edit="./web"
+  }
+  strider_tab name="HOME (graphql)" {
+    pane name="graphql" cwd="/Users/david.hoeppner/code/space-flavor" edit="./graphql-service"
+  }
+}
+
+env {
+    ZELLIJ_HOSTNAME_PANE "$(canyonero hostname)"
+}
