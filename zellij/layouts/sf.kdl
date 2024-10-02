@@ -1,0 +1,16 @@
+layout {
+    pane split_direction="horizontal" {
+        pane cwd="/Users/david.hoeppner/code/space-flavor"
+        pane command="sudo" {
+            args "htop" "--tree"
+            size "30%"            
+        }
+    }
+    pane size=1 borderless=true {
+        plugin location="zellij:tab-bar"
+    }
+    children
+    pane size=2 borderless=true {
+      plugin location="zellij:status-bar"
+    }   
+}
