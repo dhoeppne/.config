@@ -1,3 +1,9 @@
+## ENABLE PROFILING
+if [ -n "${ZSH_PROFILE_STARTUP:+x}" ]
+then
+    zmodload zsh/zprof
+fi
+
 # Start configuration added by Zim install {{{
 #
 # User configuration sourced by interactive shells
@@ -134,7 +140,8 @@ source $HOME/.config/zshrc/git_aliases
 export EDITOR='nvim'
 
 # lazy load near end of file
-() {
+lazy_load_func() {
+    unset -f lazy_load_func
     # add our local functions dir to the fpath
     local funcs=$HOME/.config/zshrc/functions
     local work_funcs=$HOME/.config/zshrc/ignore_functions
@@ -151,7 +158,7 @@ export EDITOR='nvim'
     if [[ -d $work_funcs ]]; then
         autoload ${=$(cd "$work_funcs" && echo *)}
     fi
-}
+}; lazy_load_func
 
 # source everything we don't want to commit
 # keep this near the end to make troubleshooting easier
@@ -181,3 +188,9 @@ _lazy_load rustup "rustup completions zsh > ~/.zfunc/_rustup"
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f $HOME/.config/p10k/.p10k.zsh ]] || source $HOME/.config/p10k/.p10k.zsh
+
+## PRINT PROFILING RESULTS
+if [ -n "${ZSH_PROFILE_STARTUP:+x}" ]
+then
+    zprof
+fi
