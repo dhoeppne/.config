@@ -163,7 +163,7 @@ lazy_load_func() {
 # source everything we don't want to commit
 # keep this near the end to make troubleshooting easier
 # # ie credentials and work stuff
-if ls $HOME/.config/zshrc/.IGNORE_* 1> /dev/null 2>&1; then
+if [[ -d $HOME/.config/zshrc/.IGNORE_* ]] ; then
     for file in $HOME/.config/zshrc/.IGNORE_*; do
         source $file
     done
