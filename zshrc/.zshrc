@@ -170,7 +170,7 @@ lazy_load_func() {
 # keep this near the end to make troubleshooting easier
 # # ie credentials and work stuff
 # these files should follow the pattern `.IGNORE_*`
-if ls $HOME/.config/zshrc/.IGNORE_* 1> /dev/null 2>&1; then
+if find $HOME/.config/zshrc/ -name ".IGNORE_*" | grep -q .; then
     for file in $HOME/.config/zshrc/.IGNORE_*; do
         source $file
     done
@@ -182,9 +182,7 @@ export SDKMAN_DIR="$HOME/.sdkman"
 if [[ "$SHELL" =~ "zsh" ]] && command -v lazyload >/dev/null; then
   lazyload sdk -- 'source "$SDKMAN_DIR/bin/sdkman-init.sh"'
 
-  if command -v pyenv 1>/dev/null 2>&1; then
-    lazyload pyenv -- 'eval "$(pyenv init -)"'
-  fi
+  lazyload pyenv -- 'eval "$(pyenv init -)"'
 
   # Set PATH, MANPATH, etc., for Homebrew.
   lazyload brew -- 'eval "$(/opt/homebrew/bin/brew shellenv)"'

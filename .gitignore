@@ -10,3 +10,4 @@ yarn
 *IGNORE*
 gh-dash
 htop/*
+.DS_Store
