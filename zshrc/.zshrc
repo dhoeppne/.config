@@ -115,9 +115,15 @@ MAGIC_ENTER_GIT_COMMAND='git status -u .'
 MAGIC_ENTER_OTHER_COMMAND='ls -lh .'
 
 source <(fzf --zsh)
-
+source <(kubectl completion zsh)
 export GOPATH=$HOME/go
 export PATH=$PATH:$HOME/go/bin
+
+# zsh-autocomplete settings
+zstyle ':autocomplete:*' insert-unambiguous yes # stops zsh-autocomplete from taking the first available option
+zstyle ':autocomplete:*' min-delay 0.2 # seconds
+zstyle ':autocomplete:*' fzf-completion yes
+setopt menu_complete
 
 # load a faster nvm
 alias nvm='fnm'
@@ -183,7 +189,6 @@ if [[ "$SHELL" =~ "zsh" ]] && command -v lazyload >/dev/null; then
 fi
 
 # use goarano/zsh-lazy-load to lazy load some completions
-_lazy_load kubectl "[[ $commands[kubectl] ]] && source <(kubectl completions zsh)"
 _lazy_load rustup "rustup completions zsh > ~/.zfunc/_rustup"
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.

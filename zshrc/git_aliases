@@ -1,44 +1,13 @@
 alias g='git'
 
-# Check if alias 'co' exists, if not, set it
-if ! git config --global --get alias.co > /dev/null; then
-  git config --global alias.co checkout
-fi
+git config --global alias.co checkout
+git config --global alias.b branch
+git config --global alias.cm 'commit -m'
+git config --global alias.co- 'checkout -'
+git config --global alias.com '!f() { git checkout $(git symbolic-ref refs/remotes/origin/HEAD | sed "s@^refs/remotes/origin/@@"); }; f'
+git config --global alias.l pull
+git config --global alias.p push
+git config --global alias.a add
+git config --global alias.cl clone
+git config --global alias.rv 'remote -v'
 
-# Check if alias 'b' exists, if not, set it
-if ! git config --global --get alias.b > /dev/null; then
-  git config --global alias.b branch
-fi
-
-# Check if alias 'cm' exists, if not, set it
-if ! git config --global --get alias.cm > /dev/null; then
-  git config --global alias.cm 'commit -m'
-fi
-
-# Check if alias 'co-' exists, if not, set it
-if ! git config --global --get alias.co- > /dev/null; then
-  git config --global alias.co- 'checkout -'
-fi
-
-# Check if alias 'com' exists, if not, set it
-if ! git config --global --get alias.com > /dev/null; then
-  git config --global alias.com '!f() { git checkout $(git config --get init.defaultBranch); }; f'
-fi
-
-# Check if alias 'l' exists, if not, set it
-if ! git config --global --get alias.l > /dev/null; then
-  git config --global alias.l pull
-fi
-
-# Check if alias 'l' exists, if not, set it
-if ! git config --global --get alias.p > /dev/null; then
-  git config --global alias.p push
-fi
-
-if ! git config --global --get alias.a > /dev/null; then
-  git config --global alias.a add
-fi
-
-if ! git config --global --get alias.cl > /dev/null; then
-  git config --global alias.cl clone
-fi
