@@ -1,0 +1,6 @@
+function lsf() {
+    echo -e "\e[31mUniversal functions\e[0m"
+    ls -1 ~/.config/zshrc/functions/
+    echo -e "\e[31mWork functions\e[0m"
+    ls -1 ~/.config/zshrc/IGNORE_functions/
+}
