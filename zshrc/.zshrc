@@ -150,7 +150,7 @@ lazy_load_func() {
     unset -f lazy_load_func
     # add our local functions dir to the fpath
     local funcs=$HOME/.config/zshrc/functions
-    local work_funcs=$HOME/.config/zshrc/ignore_functions
+    local work_funcs=$HOME/.config/zshrc/IGNORE_functions/
 
     # FPATH is already tied to fpath, but this adds
     # a uniqueness constraint to prevent duplicate entries
@@ -169,11 +169,13 @@ lazy_load_func() {
 # source everything we don't want to commit
 # keep this near the end to make troubleshooting easier
 # # ie credentials and work stuff
-if [[ -d $HOME/.config/zshrc/.IGNORE_* ]] ; then
+# these files should follow the pattern `.IGNORE_*`
+if ls $HOME/.config/zshrc/.IGNORE_* 1> /dev/null 2>&1; then
     for file in $HOME/.config/zshrc/.IGNORE_*; do
         source $file
     done
 fi
+
 
 # use qooman/lazy-load to load slow env managers
 export SDKMAN_DIR="$HOME/.sdkman"
