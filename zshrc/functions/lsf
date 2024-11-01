@@ -1,6 +1,20 @@
 function lsf() {
     echo -e "\e[31mUniversal functions\e[0m"
     ls -1 ~/.config/zshrc/functions/
+    for arg in "$@"; do
+        if find $HOME/.config/zshrc/functions/ -name "$arg" | grep -q .; then
+            echo -e "\e[31m==============\e[0m$arg\e[31m===================\e[0m"
+            cat ~/.config/zshrc/functions/$arg
+            echo -e "\e[31m====================================\e[0m"
+        fi
+    done
     echo -e "\e[31mWork functions\e[0m"
     ls -1 ~/.config/zshrc/IGNORE_functions/
+    for arg in "$@"; do
+        if find $HOME/.config/zshrc/IGNORE_functions/ -name "$arg" | grep -q .; then
+            echo -e "\e[31m==============\e[0m$arg\e[31m===================\e[0m"
+            cat ~/.config/zshrc/IGNORE_functions/$arg
+            echo -e "\e[31m====================================\e[0m"
+        fi
+    done
 }
