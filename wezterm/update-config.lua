@@ -7,13 +7,21 @@ function M.setup_git_check_command()
       cd ~/.config
       git fetch origin main
       if [ "$(git rev-parse HEAD)" != "$(git rev-parse origin/main)" ]; then
-          echo "Updates found in ~/.config, pulling changes..."
+            echo "Changes found in remote config repo. Would you like to update now? (y/n)"
+            read answer
+            if [ "$answer" = "y" ]; then
+                echo "Updating..."
           git pull origin main
           echo "Restarting WezTerm..."
           wezterm cli spawn --new-window wezterm
           wezterm cli quit --all
           exit 0
+            else
+                echo "Update skipped."
       fi
+        else
+            echo "No updates found."
+        fi
   ]]
 
   return {'zsh', '-c', check_script}
