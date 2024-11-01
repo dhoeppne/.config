@@ -197,7 +197,6 @@ if find $HOME/.config/zshrc/ -name ".IGNORE_*" | grep -q .; then
     done
 fi
 
-
 # use qooman/lazy-load to load slow env managers
 export SDKMAN_DIR="$HOME/.sdkman"
 if [[ "$SHELL" =~ "zsh" ]] && command -v lazyload >/dev/null; then
