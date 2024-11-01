@@ -2,6 +2,7 @@
 local wezterm = require("wezterm")
 local appearance = require("appearance")
 local projects = require("projects")
+require("update").setup_startup_hook()
 
 -- This will hold the configuration.
 local config = wezterm.config_builder()

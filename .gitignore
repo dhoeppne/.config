@@ -9,5 +9,5 @@ starship
 yarn
 *IGNORE*
 gh-dash
-htop/*
+htop
 .DS_Store
