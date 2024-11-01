@@ -10,4 +10,5 @@ git config --global alias.p push
 git config --global alias.a add
 git config --global alias.cl clone
 git config --global alias.rv 'remote -v'
-
+git config --global alias.aa 'add .'
+git config --global alias.acm '!git add . && git commit -m'
