@@ -12,7 +12,7 @@ function M.setup_git_check_command()
             if [ "$answer" = "y" ]; then
                 echo "Updating..."
           git pull origin main
-          echo "Restarting WezTerm..."
+          echo "Restarting WezTerm... to apply the update"
           wezterm cli spawn --new-window wezterm
           wezterm cli quit --all
           exit 0
