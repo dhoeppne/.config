@@ -219,5 +219,3 @@ if [ -n "${ZSH_PROFILE_STARTUP:+x}" ]
 then
     zprof
 fi
-
-echo "test test test"
