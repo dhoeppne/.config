@@ -147,7 +147,6 @@ zstyle ':fzf-tab:*' use-fzf-default-opts yes
 zstyle ':fzf-tab:*' switch-group '<' '>'
 
 # load a faster nvm
-alias nvm='fnm'
 eval "$(fnm env --version-file-strategy=recursive --use-on-cd --shell zsh)"
 
 # Check if zellij is installed, and if not, install it using Homebrew
@@ -160,11 +159,12 @@ fi
 alias z=zellij
 alias c=code
 alias yin='yarn install'
+export EDITOR='nvim'
+alias nvm='fnm'
 
 # load git aliases
 source $HOME/.config/zshrc/git_aliases
 
-export EDITOR='nvim'
 
 # lazy load near end of file
 lazy_load_func() {
