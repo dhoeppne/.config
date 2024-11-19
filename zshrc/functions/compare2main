@@ -1,0 +1,52 @@
+#!/bin/bash
+
+compare_branches_to_main() {
+    local branch1=$1
+    local branch2=$2
+    local main_branch="main"
+
+    # Ensure we're in a git repository
+    if ! git rev-parse --is-inside-work-tree > /dev/null 2>&1; then
+        echo "Error: Not in a git repository" >&2
+        return 1
+    fi
+
+    # Check if branches exist
+    if ! git show-ref --verify --quiet refs/heads/$branch1; then
+        echo "Error: Branch $branch1 does not exist" >&2
+        return 1
+    fi
+
+    if ! git show-ref --verify --quiet refs/heads/$branch2; then
+        echo "Error: Branch $branch2 does not exist" >&2
+        return 1
+    fi
+
+    if ! git show-ref --verify --quiet refs/heads/$main_branch; then
+        echo "Error: Branch $main_branch does not exist" >&2
+        return 1
+    fi
+
+    # Get the diff between main and branch1
+    diff1=$(git diff $main_branch..$branch1)
+
+    # Get the diff between main and branch2
+    diff2=$(git diff $main_branch..$branch2)
+
+    # Compare the diffs
+    if [ "$diff1" = "$diff2" ]; then
+        echo "These branches are the same"
+        return 0
+    else
+        echo "These branches are different"
+        return 1
+    fi
+}
+
+# Check if two arguments are provided
+if [ $# -ne 2 ]; then
+    echo "Usage: $0 <branch1> <branch2>"
+else
+    # Call the function with the provided branch names
+    compare_branches_to_main "$1" "$2"
+fi
