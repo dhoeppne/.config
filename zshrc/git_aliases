@@ -12,3 +12,4 @@ git config --global alias.cl clone
 git config --global alias.rv 'remote -v'
 git config --global alias.aa 'add .'
 git config --global alias.acm '!git add . && git commit -m'
+git config --global alias.c '!git reset && git checkout -- .'

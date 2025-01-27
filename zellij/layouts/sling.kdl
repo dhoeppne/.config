@@ -23,25 +23,27 @@ layout {
     }
   }
   tab name="HOME (SERVICES)" split_direction="vertical" {
+
     pane {
-      name "Home"
-      focus true
-      cwd "/Users/david.hoeppner/code/space-flavor"
+      name "Slingshot"
+      cwd "/Users/david.hoeppner/code/space-flavor/slingshot"
       command "yarn"
-      args "run:local" "-a" "-hcw" "-hps" "-h" "--hot" "--cache"
+      args  "run" "dev"
     }
     pane split_direction="horizontal"{
       pane {
         name "Graphql"
         cwd "/Users/david.hoeppner/code/space-flavor/graphql-service"
         command "yarn"
-        args "run" "dev:integration"
+        args "run" "dev"
+        size "30%"
       }
       pane {
-        name "Tunnel"
-        size "30%"
-        command "zsh"
-        args  "-c" "/Users/david.hoeppner/code/space-flavor/scripts/local/local-suv-dev.sh -c -g $(canyonero hostname)"
+        name "Home"
+        focus true
+        cwd "/Users/david.hoeppner/code/space-flavor"
+        command "yarn"
+        args "run:local" "-a" "-hcw" "-hps" "-h" "--hot" "--cache"
       }
     }
   }
