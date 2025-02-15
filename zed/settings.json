@@ -18,8 +18,8 @@
     },
     "version": "2"
   },
-  "ui_font_size": 16,
-  "buffer_font_size": 16,
+  "ui_font_size": 14,
+  "buffer_font_size": 14.0,
   "theme": {
     "mode": "dark",
     "light": "Tokyo Night Storm",
@@ -27,7 +27,8 @@
   },
   "ui_font_family": "Fira Code",
   "terminal": {
-    "font_family": "Fira Code"
+    "font_family": "Fira Code",
+    "font_size": 14
   },
   "auto_update": true,
   "autosave": "on_focus_change",
