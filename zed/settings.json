@@ -25,10 +25,12 @@
     "light": "Tokyo Night Storm",
     "dark": "Tokyo Night Storm"
   },
-  "ui_font_family": "Fira Code",
+  "ui_font_family": "FiraCode Nerd Font Mono",
+  "buffer_font_family": "FiraCode Nerd Font Mono",
   "terminal": {
-    "font_family": "Fira Code",
-    "font_size": 14
+    "font_family": "FiraCode Nerd Font Mono",
+    "font_size": 14,
+    "line_height": "standard"
   },
   "auto_update": true,
   "autosave": "on_focus_change",

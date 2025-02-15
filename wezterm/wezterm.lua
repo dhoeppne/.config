@@ -19,7 +19,7 @@ else
     config.color_scheme = "Tokyo Night Storm"
 end
 
-config.font = wezterm.font({ family = "Fira Code" })
+config.font = wezterm.font({ family = "FiraCode Nerd Font Mono" })
 config.font_size = 13.0
 
 -- Slightly transparent and blurred background
@@ -28,7 +28,7 @@ config.macos_window_background_blur = 30
 config.window_decorations = "RESIZE"
 -- Sets the font for the window frame (tab bar)
 config.window_frame = {
-    font = wezterm.font({ family = "Fira Code", weight = "Bold" }),
+    font = wezterm.font({ family = "FiraCode Nerd Font Mono", weight = "Bold" }),
     font_size = 10,
 }
 
