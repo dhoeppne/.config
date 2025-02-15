@@ -8,9 +8,8 @@
 // command palette (cmd-shift-p / ctrl-shift-p)
 {
   "features": {
-    "edit_prediction_provider": "zed"
+    "inline_completion_provider": "zed"
   },
-
   "assistant": {
     "default_model": {
       "provider": "anthropic",
@@ -30,9 +29,5 @@
     "font_family": "Fira Code"
   },
   "auto_update": true,
-  "autosave": "on_focus_change",
-  "telemetry": {
-    "diagnostics": false,
-    "metrics": false
-  }
+  "autosave": "on_focus_change"
 }
