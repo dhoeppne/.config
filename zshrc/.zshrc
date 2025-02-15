@@ -159,9 +159,8 @@ fi
 alias z=zellij
 alias c=code
 alias yin='yarn install'
-export EDITOR='nvim'
+export EDITOR='code'
 alias nvm='fnm'
-alias n=nvim
 
 # load git aliases
 source $HOME/.config/zshrc/git_aliases
