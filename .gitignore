@@ -11,3 +11,5 @@ gh-dash
 htop
 .DS_Store
 zed/prompts/
+zed/embeddings/
+zed/conversations
