@@ -10,4 +10,10 @@ yarn
 gh-dash
 htop
 .DS_Store
+zed/prompts/**/*
+zed/embeddings/**/*
+ze/conversations/**/*
+zed/*
+!zed/themes
+!zed/settings.json
 nvim
