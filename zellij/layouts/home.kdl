@@ -46,10 +46,10 @@ layout {
     }
   }
   strider_tab name="HOME (client)" focus=true {
-    pane name="client" cwd="/Users/david.hoeppner/code/space-flavor" edit="./web"
+    pane name="client" cwd="/Users/david.hoeppner/code/space-flavor"
   }
   strider_tab name="HOME (graphql)" {
-    pane name="graphql" cwd="/Users/david.hoeppner/code/space-flavor" edit="./graphql-service"
+    pane name="graphql" cwd="/Users/david.hoeppner/code/space-flavor"
   }
 }
 
