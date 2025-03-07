@@ -181,5 +181,7 @@ config.key_tables = {
     },
 }
 
+config.send_composed_key_when_left_alt_is_pressed = true
+
 -- and finally, return the configuration to wezterm
 return config
