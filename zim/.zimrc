@@ -1,7 +1,6 @@
 zmodule duration-info
 zmodule zsh-users/zsh-completions --fpath src
 zmodule hlissner/zsh-autopair
-# zmodule romkatv/powerlevel10k --use degit
 zmodule romkatv/zsh-prompt-benchmark
 zmodule zsh-users/zsh-history-substring-search
 zmodule Aloxaf/fzf-tab -s fzf-tab.plugin.zsh -f '.'
@@ -10,6 +9,5 @@ zmodule qoomon/zsh-lazyload -s 'zsh-lazyload.plugin.zsh' -f '.'
 zmodule goarano/zsh-lazy-load -s 'lazy-load.plugin.zsh' -f '.'
 zmodule zap-zsh/magic-enter -s 'magic-enter.plugin.zsh' -f '.'
 zmodule mfaerevaag/wd -s 'wd.plugin.zsh' -f '.'
-# zmodule marlonrichert/zsh-autocomplete -s 'zsh-autocomplete.plugin.zsh' -f '.'
 zmodule zsh-users/zsh-autosuggestions
 zmodule completion
