@@ -167,7 +167,7 @@ config.keys = {
         mods = "SUPER",
         action = wezterm.action.SpawnCommandInNewTab({
             cwd = wezterm.home_dir,
-            args = { "nvim", wezterm.config_file },
+            args = { "code", wezterm.config_file },
         }),
     },
 }
