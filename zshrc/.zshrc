@@ -25,7 +25,7 @@ setopt HIST_IGNORE_ALL_DUPS
 #
 
 # Set editor default keymap to emacs (`-e`) or vi (`-v`)
-bindkey -v
+bindkey -e
 
 # Prompt for spelling correction of commands.
 #setopt CORRECT
@@ -103,7 +103,7 @@ export PATH="$HOME/.local/bin:$PATH"
 
 # magic-enter defaults
 MAGIC_ENTER_GIT_COMMAND='git status -u .'
-MAGIC_ENTER_OTHER_COMMAND='ls -lh .'
+MAGIC_ENTER_OTHER_COMMAND='ls -lha .'
 
 source <(fzf --zsh)
 fpath=(/Users/david/.docker/completions $fpath)
@@ -157,7 +157,6 @@ alias nvm='fnm'
 # load git aliases
 source $HOME/.config/zshrc/git_aliases
 
-
 # lazy load near end of file
 lazy_load_func() {
     unset -f lazy_load_func
@@ -181,7 +180,7 @@ lazy_load_func() {
 
 # source everything we don't want to commit
 # keep this near the end to make troubleshooting easier
-# # ie credentials and work stuff
+# ie credentials and work stuff
 # these files should follow the pattern `.IGNORE_*`
 if find $HOME/.config/zshrc/ -name ".IGNORE_*" | grep -q .; then
     for file in $HOME/.config/zshrc/.IGNORE_*; do
