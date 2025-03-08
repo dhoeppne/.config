@@ -106,6 +106,7 @@ MAGIC_ENTER_GIT_COMMAND='git status -u .'
 MAGIC_ENTER_OTHER_COMMAND='ls -lh .'
 
 source <(fzf --zsh)
+fpath=(/Users/david/.docker/completions $fpath)
 # source <(kubectl completion zsh)
 export GOPATH=$HOME/go
 export PATH=$PATH:$HOME/go/bin
