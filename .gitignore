@@ -17,3 +17,4 @@ zed/*
 !zed/themes
 !zed/settings.json
 nvim
+.vscode

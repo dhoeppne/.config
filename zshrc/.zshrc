@@ -111,6 +111,9 @@ fpath=(/Users/david/.docker/completions $fpath)
 export GOPATH=$HOME/go
 export PATH=$PATH:$HOME/go/bin
 
+# wezterm is now available on the command line
+export PATH="$PATH:/Applications/WezTerm.app/Contents/MacOS"
+
 # zsh-autocomplete settings
 # zstyle ':autocomplete:*' insert-unambiguous yes # stops zsh-autocomplete from taking the first available option
 # zstyle ':autocomplete:*' min-delay 0.2 # seconds
@@ -210,3 +213,10 @@ fi
 
 export STARSHIP_CONFIG=~/.config/starship/starship.toml
 eval "$(starship init zsh)"
+
+# bun completions
+[ -s "/Users/david.hoeppner/.bun/_bun" ] && source "/Users/david.hoeppner/.bun/_bun"
+
+# bun
+export BUN_INSTALL="$HOME/.bun"
+export PATH="$BUN_INSTALL/bin:$PATH"
