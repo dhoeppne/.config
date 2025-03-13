@@ -1,7 +1,8 @@
 -- Pull in the wezterm API
 local wezterm = require("wezterm")
 local appearance = require("appearance")
-local projects = require("projects")
+local keybinds = require("keybinds")
+local multiplexing = require("multiplexing")
 require("update-config").setup_hooks()
 
 -- This will hold the configuration.
@@ -11,6 +12,7 @@ config.set_environment_variables = {
     PATH = "/opt/homebrew/bin:" .. os.getenv("PATH"),
 }
 config.leader = { key = "F", mods = "CMD|SHIFT", timeout_milliseconds = 1000 }
+config.check_for_updates = true
 
 -- This is where you actually apply your config choices
 if appearance.is_dark() then
@@ -31,21 +33,6 @@ config.window_frame = {
     font = wezterm.font({ family = "FiraCode Nerd Font Mono", weight = "Bold" }),
     font_size = 10,
 }
-
-local function move_pane(key, direction)
-    return {
-        key = key,
-        mods = "LEADER",
-        action = wezterm.action.ActivatePaneDirection(direction),
-    }
-end
-
-local function resize_pane(key, direction)
-    return {
-        key = key,
-        action = wezterm.action.AdjustPaneSize({ direction, 3 }),
-    }
-end
 
 -- Set a p10k style status in the menu bar
 local function segments_for_right_status(window, pane)
@@ -109,77 +96,8 @@ wezterm.on("update-status", function(window, pane)
     window:set_right_status(wezterm.format(elements))
 end)
 
--- Lets set all our custom key bindings
-config.keys = {
-    -- Make Option-Left equivalent to Alt-b which many line editors interpret as backward-word
-    { key = "LeftArrow",  mods = "OPT", action = wezterm.action({ SendString = "\x1bb" }) },
-    -- Make Option-Right equivalent to Alt-f; forward-word
-    { key = "RightArrow", mods = "OPT", action = wezterm.action({ SendString = "\x1bf" }) },
-    {
-        key = "v",
-        mods = "LEADER",
-        action = wezterm.action.SplitVertical({ domain = "CurrentPaneDomain" }),
-    },
-    {
-        key = "h",
-        mods = "LEADER",
-        action = wezterm.action.SplitHorizontal({ domain = "CurrentPaneDomain" }),
-    },
-    {
-        key = "w",
-        mods = "LEADER",
-        action = wezterm.action.CloseCurrentPane({ confirm = false }),
-    },
-    {
-        key = "p",
-        mods = "LEADER",
-        -- Present in to our project picker
-        action = projects.choose_project(),
-    },
-    {
-        key = "f",
-        mods = "LEADER",
-        -- Present a list of existing workspaces
-        action = wezterm.action.ShowLauncherArgs({ flags = "FUZZY|WORKSPACES" }),
-    },
-    -- Sends ESC + b and ESC + f sequence, which is used
-    -- for telling your shell to jump back/forward.
-    move_pane("j", "Down"),
-    move_pane("k", "Up"),
-    move_pane("l", "Left"),
-    move_pane("h", "Right"),
-    {
-        -- When we push LEADER + R...
-        key = "r",
-        mods = "LEADER",
-        -- Activate the `resize_panes` keytable
-        action = wezterm.action.ActivateKeyTable({
-            name = "resize_panes",
-            -- Ensures the keytable stays active after it handles its
-            -- first keypress.
-            one_shot = false,
-            -- Deactivate the keytable after a timeout.
-            timeout_milliseconds = 1000,
-        }),
-    },
-    {
-        key = ",",
-        mods = "SUPER",
-        action = wezterm.action.SpawnCommandInNewTab({
-            cwd = wezterm.home_dir,
-            args = { "code", wezterm.config_file },
-        }),
-    },
-}
-
-config.key_tables = {
-    resize_panes = {
-        resize_pane("j", "Down"),
-        resize_pane("k", "Up"),
-        resize_pane("l", "Left"),
-        resize_pane("h", "Right"),
-    },
-}
+config.keys = keybinds.create_keybinds()
+config.key_tables = keybinds.create_keytables()
 
 config.send_composed_key_when_left_alt_is_pressed = true
 
