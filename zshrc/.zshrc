@@ -153,6 +153,7 @@ fi
 # load zellij
 alias z=zellij
 alias c=code
+alias y=yarn
 alias yin='yarn install'
 export EDITOR='code'
 alias nvm='fnm'
