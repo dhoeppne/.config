@@ -1,11 +1,35 @@
 # changes the current branch name to the passed in branch name.
 # use -r to also change the remote branch name.
-# usage: cbn -r new-branch-name
+# usage: cbn new-branch-name [-r]
 function cbn() {
-  git branch -m "$2"
-  if [[ "$1" == "-r" ]]; then
-   git push origin -u "$1"
-   git push origin --delete "$(git rev-parse --abbrev-ref HEAD)"
-   git push origin -u "$2"
+  local remote_flag=false
+  local branch_name=""
+
+  # Parse arguments
+  for arg in "$@"; do
+    if [[ "$arg" == "-r" ]]; then
+      remote_flag=true
+    else
+      branch_name="$arg"
+    fi
+  done
+
+  # Validate we have a branch name
+  if [[ -z "$branch_name" ]]; then
+    echo "Error: Branch name is required."
+    echo "Usage: cbn new-branch-name [-r]"
+    return 1
+  fi
+
+  # Get the current branch name before changing it
+  local old_branch="$(git rev-parse --abbrev-ref HEAD)"
+
+  # Change local branch name
+  git branch -m "$branch_name"
+
+  # If -r flag is provided, update remote
+  if $remote_flag; then
+    git push origin --delete "$old_branch"
+    git push origin -u "$branch_name"
   fi
 }
