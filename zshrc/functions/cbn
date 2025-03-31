@@ -1,0 +1,11 @@
+# changes the current branch name to the passed in branch name.
+# use -r to also change the remote branch name.
+# usage: cbn -r new-branch-name
+function cbn() {
+  git branch -m "$2"
+  if [[ "$1" == "-r" ]]; then
+   git push origin -u "$1"
+   git push origin --delete "$(git rev-parse --abbrev-ref HEAD)"
+   git push origin -u "$2"
+  fi
+}
