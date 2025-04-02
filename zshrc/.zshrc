@@ -1,3 +1,5 @@
+# Add deno completions to search path
+if [[ ":$FPATH:" != *":/Users/david/.zsh/completions:"* ]]; then export FPATH="/Users/david/.zsh/completions:$FPATH"; fi
 ## ENABLE PROFILING
 if [ -n "${ZSH_PROFILE_STARTUP:+x}" ]
 then
@@ -221,3 +223,4 @@ eval "$(starship init zsh)"
 # bun
 export BUN_INSTALL="$HOME/.bun"
 export PATH="$BUN_INSTALL/bin:$PATH"
+. "/Users/david/.deno/env"

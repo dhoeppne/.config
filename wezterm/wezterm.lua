@@ -14,6 +14,8 @@ config.set_environment_variables = {
 config.leader = { key = "F", mods = "CMD|SHIFT", timeout_milliseconds = 1000 }
 config.check_for_updates = true
 
+config.scrollback_lines = 20000
+
 -- This is where you actually apply your config choices
 if appearance.is_dark() then
     config.color_scheme = "Tokyo Night Storm"
