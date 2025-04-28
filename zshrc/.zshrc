@@ -159,6 +159,7 @@ alias y=yarn
 alias yin='yarn install'
 export EDITOR='code'
 alias nvm='fnm'
+alias grep='grep --color=auto'
 
 # load git aliases
 source $HOME/.config/zshrc/git_aliases
