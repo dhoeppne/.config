@@ -145,6 +145,10 @@ zstyle ':fzf-tab:*' switch-group '<' '>'
 
 # load a faster nvm
 eval "$(fnm env --version-file-strategy=recursive --use-on-cd --shell zsh)"
+# set the global yarn bin
+# https://github.com/Schniz/fnm/issues/87#issuecomment-751366346
+export YARN_GLOBAL_FOLDER="$FNM_MULTISHELL_PATH/yarn-global"
+export YARN_PREFIX="$FNM_MULTISHELL_PATH"
 
 # Check if zellij is installed, and if not, install it using Homebrew
 if ! command -v zellij &> /dev/null; then
@@ -154,12 +158,13 @@ fi
 
 # load zellij
 alias z=zellij
-alias c=code
+alias c=cursor
 alias y=yarn
 alias yin='yarn install'
-export EDITOR='code'
+export EDITOR='cursor'
 alias nvm='fnm'
 alias grep='grep --color=auto'
+alias ghpc='gh pr checkout'
 
 # load git aliases
 source $HOME/.config/zshrc/git_aliases

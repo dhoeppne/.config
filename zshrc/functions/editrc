@@ -1,5 +1,5 @@
 #!/bin/bash
 
 function editrc() {
-  code ~/.config
+  c ~/.config
 }
