@@ -18,6 +18,31 @@ local function resize_pane(key, direction)
     }
 end
 
+function module.create_mouse_bindings()
+    local mouse_bindings = {
+        -- Disable the default click behavior
+        {
+            event = { Up = { streak = 1, button = "Left"} },
+            mods = "NONE",
+            action = wezterm.action.CompleteSelection 'ClipboardAndPrimarySelection',
+        },
+        -- Cmd-click will open the link under the mouse cursor
+        {
+            event = { Up = { streak = 1, button = "Left" } },
+            mods = "SUPER",
+            action = wezterm.action.OpenLinkAtMouseCursor,
+        },
+        -- Disable the Cmd-click down event to stop programs from seeing it when a URL is clicked
+        {
+            event = { Down = { streak = 1, button = "Left" } },
+            mods = "SUPER",
+            action = wezterm.action.Nop,
+        },
+    }
+
+    return mouse_bindings
+end
+
 function module.create_keybinds()
     -- Lets set all our custom key bindings
     local key_bindings = {

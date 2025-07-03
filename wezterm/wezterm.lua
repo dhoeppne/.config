@@ -99,6 +99,7 @@ wezterm.on("update-status", function(window, pane)
 end)
 
 config.keys = keybinds.create_keybinds()
+config.mouse_bindings = keybinds.create_mouse_bindings()
 config.key_tables = keybinds.create_keytables()
 
 config.send_composed_key_when_left_alt_is_pressed = true
