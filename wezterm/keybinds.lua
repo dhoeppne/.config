@@ -53,12 +53,12 @@ function module.create_keybinds()
         {
             key = "v",
             mods = "CTRL",
-            action = wezterm.action.SplitVertical({ domain = "CurrentPaneDomain" }),
+            action = wezterm.action.SplitHorizontal({ domain = "CurrentPaneDomain" }),
         },
         {
             key = "h",
             mods = "CTRL",
-            action = wezterm.action.SplitHorizontal({ domain = "CurrentPaneDomain" }),
+            action = wezterm.action.SplitVertical({ domain = "CurrentPaneDomain" }),
         },
         {
             key = "w",
