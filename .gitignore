@@ -18,3 +18,4 @@ zed/*
 !zed/settings.json
 nvim
 .vscode
+pip

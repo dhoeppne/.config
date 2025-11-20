@@ -164,7 +164,7 @@ alias yin='yarn install'
 export EDITOR='cursor'
 alias nvm='fnm'
 alias grep='grep --color=auto'
-alias ghpc='gh pr checkout'
+alias ghpc='gh pr checkout -f'
 
 # load git aliases
 source $HOME/.config/zshrc/git_aliases
