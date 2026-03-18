@@ -201,10 +201,7 @@ if find $HOME/.config/zshrc/ -name ".IGNORE_*" | grep -q .; then
 fi
 
 # use qooman/lazy-load to load slow env managers
-export SDKMAN_DIR="$HOME/.sdkman"
 if [[ "$SHELL" =~ "zsh" ]] && command -v lazyload >/dev/null; then
-  lazyload sdk -- 'source "$SDKMAN_DIR/bin/sdkman-init.sh"'
-
   lazyload pyenv -- 'eval "$(pyenv init -)"'
 
   # Set PATH, MANPATH, etc., for Homebrew.

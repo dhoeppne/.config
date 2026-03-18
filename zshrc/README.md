@@ -32,7 +32,6 @@ The .zshrc file is the main configuration file for Zsh. It includes various sett
 * Ignore Files
 Sensitive and Work-Specific Configurations: Sources files matching the pattern .IGNORE_* to load sensitive or work-specific configurations without committing them to version control.
 #### Lazy Loading
-* SDKMAN: Uses lazyload to load SDKMAN only when needed.
 * Pyenv: Uses lazyload to load Pyenv only when needed.
 * FNM: Uses lazyload to load [FNM](https://github.com/Schniz/fnm) only when needed.
 

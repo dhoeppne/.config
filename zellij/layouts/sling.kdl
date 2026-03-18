@@ -42,7 +42,7 @@ layout {
         focus true
         cwd "/Users/david.hoeppner/code/space-flavor"
         command "yarn"
-        args "run:local" "-a" "-hcw" "-hps" "-h" "--hot" "--cache"
+        args "run:local" "-hcw" "-hps" "-h" "--hot" "--cache"
       }
     }
   }
