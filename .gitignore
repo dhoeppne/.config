@@ -19,3 +19,4 @@ zed/*
 nvim
 .vscode
 pip
+yarn/link
