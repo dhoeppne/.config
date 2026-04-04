@@ -8,8 +8,9 @@
 // command palette (cmd-shift-p / ctrl-shift-p)
 {
   "features": {
-    "inline_completion_provider": "zed"
+    "edit_prediction_provider": "zed"
   },
+
   "assistant": {
     "default_model": {
       "provider": "anthropic",
@@ -17,17 +18,24 @@
     },
     "version": "2"
   },
-  "ui_font_size": 16,
-  "buffer_font_size": 16,
+  "ui_font_size": 14,
+  "buffer_font_size": 14.0,
   "theme": {
     "mode": "dark",
     "light": "Tokyo Night Storm",
     "dark": "Tokyo Night Storm"
   },
-  "ui_font_family": "Fira Code",
+  "ui_font_family": "FiraCode Nerd Font Mono",
+  "buffer_font_family": "FiraCode Nerd Font Mono",
   "terminal": {
-    "font_family": "Fira Code"
+    "font_family": "FiraCode Nerd Font Mono",
+    "font_size": 14,
+    "line_height": "standard"
   },
   "auto_update": true,
-  "autosave": "on_focus_change"
+  "autosave": "on_focus_change",
+  "telemetry": {
+    "diagnostics": false,
+    "metrics": false
+  }
 }
