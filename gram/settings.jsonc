@@ -1,0 +1,117 @@
+// Gram settings
+//
+// For information on how to configure Gram, see the Gram
+// documentation: gram://docs/configuring-gram
+//
+// To see all of Gram's default settings without changing your
+// custom settings, run `gram: open default settings` from the
+// command palette (cmd-shift-p / ctrl-shift-p)
+{
+  "sticky_scroll": {
+    "enabled": true,
+  },
+  "file_types": {
+    "yaml": ["*.tpl"],
+  },
+  "colorize_brackets": true,
+  "linked_edits": true,
+  "show_whitespaces": "trailing",
+  "soft_wrap": "editor_width",
+  "tab_size": 2,
+  "languages": {
+    "TypeScript": {
+      "linked_edits": true,
+      "show_whitespaces": "trailing",
+      "tab_size": 2,
+      "colorize_brackets": true,
+      "show_completions_on_input": true,
+      "use_autoclose": true,
+      "indent_guides": {
+        "enabled": true,
+      },
+      "soft_wrap": "editor_width",
+    },
+  },
+  "language_servers": [
+    "...",
+    "!tailwindcss-language-server",
+    "!vtsls",
+    "!package-version-server",
+  ],
+  "base_keymap": "VSCode",
+  "autoscroll_on_clicks": true,
+  "lsp": {
+    "bash-language-server": {
+      "binary": {
+        "allow_binary_download": true,
+      },
+      "enable_lsp_tasks": true,
+    },
+    "package-version-server": {
+      "binary": {
+        "allow_binary_download": false,
+      },
+      "enable_lsp_tasks": true,
+    },
+    "typescript-language-server": {
+      "binary": {
+        "allow_binary_download": true,
+      },
+      "enable_lsp_tasks": true,
+    },
+    "prettier (slingshot)": {
+      "binary": {
+        "allow_binary_download": true,
+      },
+      "enable_lsp_tasks": true,
+    },
+    "prettier (default)": {
+      "binary": {
+        "allow_binary_download": true,
+      },
+      "enable_lsp_tasks": true,
+    },
+    "eslint": {
+      "binary": {
+        "allow_binary_download": true,
+      },
+      "enable_lsp_tasks": true,
+    },
+    "json-language-server": {
+      "binary": {
+        "allow_binary_download": true,
+      },
+      "enable_lsp_tasks": true,
+    },
+  },
+  "node": {
+    "npm_path": "yarn",
+    "allow_binary_download": false,
+  },
+  "restore_on_startup": "last_workspace",
+  "redact_private_values": false,
+  "buffer_font_family": "FiraCode Nerd Font Mono",
+  "icon_theme": "Gram (Default)",
+  "ui_font_size": 16,
+  "buffer_font_size": 15,
+  "theme": {
+    "mode": "system",
+    "light": "Tokyo Night Storm",
+    "dark": "Tokyo Night Storm",
+  },
+  "autosave": "on_window_change",
+  "tabs": {
+    "close_position": "right",
+    "file_icons": true,
+    "git_status": true,
+    "activate_on_close": "history",
+    "show_close_button": "hover",
+    "show_diagnostics": "errors",
+  },
+  "indent_guides": {
+    "line_width": 1,
+    "active_line_width": 1,
+    "coloring": "indent_aware",
+    "background_coloring": "indent_aware",
+  },
+}
