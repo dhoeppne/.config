@@ -41,6 +41,12 @@
   "base_keymap": "VSCode",
   "autoscroll_on_clicks": true,
   "lsp": {
+    "yaml-language-server": {
+      "binary": {
+        "allow_binary_download": true,
+      },
+      "enable_lsp_tasks": true,
+    },
     "bash-language-server": {
       "binary": {
         "allow_binary_download": true,
