@@ -143,6 +143,10 @@ zstyle ':fzf-tab:*' use-fzf-default-opts yes
 # switch group using `<` and `>`
 zstyle ':fzf-tab:*' switch-group '<' '>'
 
+# magic-enter settings
+zstyle ':zshzoo:magic-enter' command 'ls -lha .'
+zstyle ':zshzoo:magic-enter' git-command 'g status -u .'
+
 # load a faster nvm
 eval "$(fnm env --version-file-strategy=recursive --use-on-cd --shell zsh)"
 # set the global yarn bin
