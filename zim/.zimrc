@@ -1,5 +1,6 @@
 zmodule duration-info
 zmodule zsh-users/zsh-completions --fpath src
+zmodule MichaelAquilina/zsh-you-should-use
 zmodule hlissner/zsh-autopair
 zmodule romkatv/zsh-prompt-benchmark
 zmodule zsh-users/zsh-history-substring-search
