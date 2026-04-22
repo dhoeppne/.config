@@ -100,7 +100,6 @@ for key ('^[[B' '^N' ${terminfo[kcud1]}) bindkey ${key} history-substring-search
 unset key
 # }}} End configuration added by Zim install
 
-export PATH=/usr/local/bin:$PATH
 export PATH="$HOME/.local/bin:$PATH"
 
 # magic-enter defaults

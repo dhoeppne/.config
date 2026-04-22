@@ -1,0 +1,35 @@
+[alias]
+	co = checkout
+	b = branch
+	cm = commit -m
+	co- = checkout -
+	com = "!f() { git checkout $(git symbolic-ref refs/remotes/origin/HEAD | sed \"s@^refs/remotes/origin/@@\"); }; f"
+	l = pull
+	p = push
+	a = add
+	cl = clone
+	rv = remote -v
+	aa = add .
+	acm = !git add . && git commit -m
+	c = !git reset && git checkout -- .
+	cob = checkout -b
+[user]
+	name = David Hoeppner
+[credential]
+	helper = osxkeychain
+[push]
+	autoSetupRemote = true
+[pull]
+	rebase = true
+[core]
+	excludesfile = ~/.config/git/ignore
+	editor = nano
+
+# Work-only overrides (email, company-internal credential helpers, etc.)
+# live in an uncommitted file next to this one. The filename contains
+# "IGNORE" to match the `*IGNORE*` rule in ~/.config/.gitignore.
+#
+# If the file doesn't exist, git silently skips it (path = vs path is
+# required = ...). Each machine scaffolds its own copy via install.sh.
+[include]
+	path = ~/.config/git/IGNORE_work_config

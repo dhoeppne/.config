@@ -20,3 +20,4 @@ nvim
 .vscode
 pip
 yarn/link
+jj/repos/**/*

@@ -1,16 +1,7 @@
+# Shell-level git shortcut. The git-level aliases (co, b, cm, com, l, p, a,
+# cl, rv, aa, acm, c, cob) are defined in ~/.config/git/config and travel
+# with the .config repo — no need to write them to ~/.gitconfig on every
+# shell startup (which previously caused concurrent `git config --global`
+# invocations to race on ~/.gitconfig.lock when Cursor spawned many shells
+# in parallel).
 alias g='git'
-
-git config --global alias.co checkout
-git config --global alias.b branch
-git config --global alias.cm 'commit -m'
-git config --global alias.co- 'checkout -'
-git config --global alias.com '!f() { git checkout $(git symbolic-ref refs/remotes/origin/HEAD | sed "s@^refs/remotes/origin/@@"); }; f'
-git config --global alias.l pull
-git config --global alias.p push
-git config --global alias.a add
-git config --global alias.cl clone
-git config --global alias.rv 'remote -v'
-git config --global alias.aa 'add .'
-git config --global alias.acm '!git add . && git commit -m'
-git config --global alias.c '!git reset && git checkout -- .'
-git config --global alias.cob 'checkout -b'
