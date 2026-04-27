@@ -24,6 +24,11 @@
 [core]
 	excludesfile = ~/.config/git/ignore
 	editor = nano
+	# Built-in filesystem monitor. Massive `git status` speedup on large
+	# repos (e.g. space-flavor goes from ~700ms to ~30ms). Safe on small
+	# repos. Requires git >= 2.37.
+	fsmonitor = true
+	untrackedCache = true
 
 # Work-only overrides (email, company-internal credential helpers, etc.)
 # live in an uncommitted file next to this one. The filename contains
