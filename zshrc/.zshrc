@@ -166,6 +166,11 @@ alias y=yarn
 alias yin='yarn install'
 export EDITOR='cursor'
 alias nvm='fnm'
+alias ls='eza -F --colour=auto --icons=auto'
+alias la='eza -F --colour=auto --icons=auto --all'
+alias ll='eza -F --colour=auto --icons=auto --oneline'
+alias lr='eza -F --colour=auto --oneline --icons=auto --recurse'
+alias lra='eza -F --colour=auto --oneline --icons=auto --all --recurse'
 alias grep='grep --color=auto'
 alias ghpc='gh pr checkout -f'
 
@@ -229,3 +234,11 @@ eval "$(starship init zsh)"
 # bun
 export BUN_INSTALL="$HOME/.bun"
 export PATH="$BUN_INSTALL/bin:$PATH"
+
+# pnpm
+export PNPM_HOME="/Users/david.hoeppner/Library/pnpm"
+case ":$PATH:" in
+  *":$PNPM_HOME:"*) ;;
+  *) export PATH="$PNPM_HOME:$PATH" ;;
+esac
+# pnpm end

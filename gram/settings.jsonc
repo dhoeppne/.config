@@ -31,6 +31,11 @@
       },
       "soft_wrap": "editor_width",
     },
+    "Markdown": {
+      "format_on_save": "on",
+      "enable_language_server": true,
+      "use_auto_surround": true,
+    },
   },
   "language_servers": [
     "...",
