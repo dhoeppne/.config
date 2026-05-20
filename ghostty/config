@@ -1,0 +1,49 @@
+# ── Font ──────────────────────────────────────────────────
+font-family = FiraCode Nerd Font Mono
+font-size = 13
+
+# ── Theme ─────────────────────────────────────────────────
+# Run `ghostty +list-themes | grep -i tokyo` to verify the exact name
+theme = TokyoNight Storm
+
+# ── Window ────────────────────────────────────────────────
+background-opacity = 0.9
+background-blur = 30
+scrollback-limit = 20000
+
+# ── Shell integration ─────────────────────────────────────
+shell-integration = detect
+
+# ── macOS option key ──────────────────────────────────────
+# Keep macOS compose behavior; word-nav handled by explicit binds below
+macos-option-as-alt = false
+
+# ── URL handling ──────────────────────────────────────────
+link-url = true
+
+# ── Keybindings ───────────────────────────────────────────
+
+# Word navigation (opt+arrow → backward/forward word)
+keybind = opt+left=esc:b
+keybind = opt+right=esc:f
+
+# Pane splits
+keybind = ctrl+v=new_split:right
+keybind = ctrl+h=new_split:down
+
+# Leader key sequences (Cmd+Shift+F > key)
+keybind = super+shift+f>w=close_surface
+keybind = super+shift+f>j=goto_split:down
+keybind = super+shift+f>k=goto_split:up
+keybind = super+shift+f>l=goto_split:left
+keybind = super+shift+f>semicolon=goto_split:right
+keybind = super+shift+f>m=toggle_split_zoom
+
+# Resize splits (3-key: Leader+r+direction; no persistent mode in Ghostty)
+keybind = super+shift+f>r>j=resize_split:down,3
+keybind = super+shift+f>r>k=resize_split:up,3
+keybind = super+shift+f>r>l=resize_split:left,3
+keybind = super+shift+f>r>semicolon=resize_split:right,3
+
+# Open config file in $EDITOR (set EDITOR=code in .zshrc for VS Code)
+keybind = super+comma=open_config

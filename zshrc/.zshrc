@@ -112,8 +112,23 @@ fpath=(/Users/david/.docker/completions $fpath)
 export GOPATH=$HOME/go
 export PATH=$PATH:$HOME/go/bin
 
-# wezterm is now available on the command line
-export PATH="$PATH:/Applications/WezTerm.app/Contents/MacOS"
+# Auto-update ~/.config from origin/main (hourly, silent auto-pull)
+() {
+  local stamp="/tmp/.config-last-check"
+  local interval=3600
+  if [[ -f "$stamp" ]]; then
+    local last=$(stat -f %m "$stamp" 2>/dev/null || echo 0)
+    local now=$(date +%s)
+    (( now - last < interval )) && return
+  fi
+  (
+    cd ~/.config || return
+    git fetch --quiet origin main 2>/dev/null || return
+    touch "$stamp"
+    [[ "$(git rev-parse HEAD)" == "$(git rev-parse origin/main)" ]] && return
+    git pull --ff-only origin main --quiet && print ".config updated from origin/main"
+  ) &!
+} 2>/dev/null
 
 # zsh-autocomplete settings
 # zstyle ':autocomplete:*' insert-unambiguous yes # stops zsh-autocomplete from taking the first available option
