@@ -1,5 +1,3 @@
-#!/bin/bash
-
 compare_branches_to_main() {
     local branch1=$1
     local branch2=$2

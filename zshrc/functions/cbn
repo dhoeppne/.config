@@ -1,4 +1,3 @@
-#!/bin/bash
 # changes the current branch name to the passed in branch name.
 # use -r to also change the remote branch name.
 # usage: cbn new-branch-name [-r]

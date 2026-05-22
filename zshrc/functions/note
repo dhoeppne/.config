@@ -1,4 +1,3 @@
-#!/bin/bash
 function note() {
   gram ~/code/notes
 }

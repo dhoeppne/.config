@@ -1,4 +1,3 @@
-#!/bin/bash
 function lsf() {
     echo -e "\e[31mUniversal functions\e[0m"
     ls -1 ~/.config/zshrc/functions/

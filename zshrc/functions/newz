@@ -1,4 +1,3 @@
-#!/bin/bash
 function newz() {
   exec zsh
 }

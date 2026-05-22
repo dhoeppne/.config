@@ -176,7 +176,7 @@ fi
 
 # load zellij
 alias z=zellij
-alias c=cursor
+# alias c=cursor
 alias y=yarn
 alias yin='yarn install'
 export EDITOR='cursor'
