@@ -1,74 +1,97 @@
-# Add deno completions to search path
-if [[ ":$FPATH:" != *":/Users/david/.zsh/completions:"* ]]; then export FPATH="/Users/david/.zsh/completions:$FPATH"; fi
-## ENABLE PROFILING
-if [ -n "${ZSH_PROFILE_STARTUP:+x}" ]
-then
-    zmodload zsh/zprof
+# ~/.zshrc  (symlinked from ~/.config/zshrc/.zshrc)
+#
+# Strategy: get an instantly-usable prompt on screen, then load everything heavy
+# in the background. The EAGER section below is all that runs before the first
+# prompt paints (shell options, PATH, aliases, functions, starship). Everything
+# else is queued with `zsh-defer` and runs once zle goes idle — so you can start
+# typing immediately and the rest (Zim plugins, completion, fnm, fzf) streams in
+# a few milliseconds later.
+
+# ============================================================================
+# Profiling  (opt-in: `ZSH_PROFILE_STARTUP=1 zsh -i -c exit`)
+# Only EAGER startup is captured here. Deferred work runs after the first prompt,
+# so it does not appear in this zprof report (that's expected).
+# ============================================================================
+if [[ -n ${ZSH_PROFILE_STARTUP:+x} ]]; then
+  zmodload zsh/zprof
 fi
 
-# Start configuration added by Zim install {{{
-#
-# User configuration sourced by interactive shells
-#
+# ============================================================================
+# EAGER · core shell behaviour
+# ============================================================================
+setopt HIST_IGNORE_ALL_DUPS          # drop older dupes when a new dupe is added
+bindkey -e                           # emacs keymap for line editing
+WORDCHARS=${WORDCHARS//[\/]}         # treat "/" as a word boundary (Ctrl-W)
+ZSH_AUTOSUGGEST_MANUAL_REBIND=1      # autosuggestions is last; skip per-precmd rebind
 
-# -----------------
-# Zsh configuration
-# -----------------
+# Completion search path. Must be populated BEFORE the deferred compinit runs so
+# these completions get picked up. `typeset -gU` keeps fpath deduped across
+# `exec zsh` (the `newz` reload function).
+typeset -gU fpath
+[[ -d /Users/david/.zsh/completions ]] && fpath=(/Users/david/.zsh/completions $fpath)
+[[ -d $HOME/.docker/completions ]]     && fpath=($HOME/.docker/completions $fpath)
 
-#
-# History
-#
+# ============================================================================
+# EAGER · PATH & environment
+# ============================================================================
+export PATH="$HOME/.local/bin:$PATH"
 
-# Remove older command from the history if a duplicate is to be added.
-setopt HIST_IGNORE_ALL_DUPS
+export GOPATH=$HOME/go
+export PATH="$PATH:$HOME/go/bin"
 
-#
-# Input/output
-#
+export BUN_INSTALL="$HOME/.bun"
+export PATH="$BUN_INSTALL/bin:$PATH"
 
-# Set editor default keymap to emacs (`-e`) or vi (`-v`)
-bindkey -e
+export PNPM_HOME="$HOME/Library/pnpm"
+case ":$PATH:" in
+  *":$PNPM_HOME:"*) ;;
+  *) export PATH="$PNPM_HOME:$PATH" ;;
+esac
 
-# Prompt for spelling correction of commands.
-#setopt CORRECT
+export EDITOR='cursor'
+export STARSHIP_CONFIG=~/.config/starship/starship.toml
 
-# Customize spelling correction prompt.
-#SPROMPT='zsh: correct %F{red}%R%f to %F{green}%r%f [nyae]? '
+# ============================================================================
+# EAGER · aliases
+# ============================================================================
+alias z=zellij
+alias y=yarn
+alias yin='yarn install'
+alias nvm='fnm'
+alias ls='eza -F --colour=auto --icons=auto'
+alias la='eza -F --colour=auto --icons=auto --all'
+alias ll='eza -F --colour=auto --icons=auto --oneline'
+alias lr='eza -F --colour=auto --oneline --icons=auto --recurse'
+alias lra='eza -F --colour=auto --oneline --icons=auto --all --recurse'
+alias grep='grep --color=auto'
+alias ghpc='gh pr checkout -f'
+source $HOME/.config/zshrc/git_aliases   # alias g=git
 
-# Remove path separator from WORDCHARS.
-WORDCHARS=${WORDCHARS//[\/]}
+# ============================================================================
+# EAGER · personal autoloaded functions  (note, editrc, c, lsf, cbn, …)
+# Fork-free: basenames are globbed straight off disk (no `cd`/`echo` subshells).
+# Work-specific functions live in IGNORE_functions/ and are picked up if present.
+# ============================================================================
+() {
+  local d fns
+  for d in $HOME/.config/zshrc/functions $HOME/.config/zshrc/IGNORE_functions; do
+    [[ -d $d ]] || continue
+    fpath=($d $fpath)
+    fns=($d/*(N:t))
+    (( ${#fns} )) && autoload -Uz $fns
+  done
+}
 
-# -----------------
-# Zim configuration
-# -----------------
+# ============================================================================
+# EAGER · prompt, then the deferral tool
+# ============================================================================
+eval "$(starship init zsh)"
 
-# Use degit instead of git as the default tool to install and update modules.
-#zstyle ':zim:zmodule' use 'degit'
-
-# --------------------
-# Module configuration
-# --------------------
-
-#
-# zsh-autosuggestions
-#
-
-# Disable automatic widget re-binding on each precmd. This can be set when
-# zsh-users/zsh-autosuggestions is the last module in your ~/.zimrc.
-ZSH_AUTOSUGGEST_MANUAL_REBIND=1
-
-# Customize the style that the suggestions are shown with.
-# See https://github.com/zsh-users/zsh-autosuggestions/blob/master/README.md#suggestion-highlight-style
-#ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=242'
-
-# ------------------
-# Initialize modules
-# ------------------
-
+# Zim bootstrap. The checks are cheap and kept eager so `init.zsh` is guaranteed
+# fresh; only the expensive `source init.zsh` itself is deferred (below).
 ZIM_CONFIG_FILE=$HOME/.config/zim/.zimrc
-# i don't bother creating a zdotdir as all my config is in the .zimrc in this repo
 ZIM_HOME=${ZDOTDIR:-${HOME}}/.zim
-# Download zimfw plugin manager if missing.
+# Download zimfw if missing (first run on a new machine).
 if [[ ! -e ${ZIM_HOME}/zimfw.zsh ]]; then
   if (( ${+commands[curl]} )); then
     curl -fsSL --create-dirs -o ${ZIM_HOME}/zimfw.zsh \
@@ -78,182 +101,107 @@ if [[ ! -e ${ZIM_HOME}/zimfw.zsh ]]; then
         https://github.com/zimfw/zimfw/releases/latest/download/zimfw.zsh
   fi
 fi
-# Install missing modules, and update ${ZIM_HOME}/init.zsh if missing or outdated.
-if [[ ! ${ZIM_HOME}/init.zsh -nt ${ZDOTDIR:-${HOME}}/.zimrc ]]; then
+# Rebuild init.zsh when .zimrc changes. Compare against the real config file
+# ($ZIM_CONFIG_FILE), not ~/.zimrc which doesn't exist here.
+if [[ ! ${ZIM_HOME}/init.zsh -nt ${ZIM_CONFIG_FILE} ]]; then
   source ${ZIM_HOME}/zimfw.zsh init -q
 fi
-# Initialize modules.
-source ${ZIM_HOME}/init.zsh
 
-# ------------------------------
-# Post-init module configuration
-# ------------------------------
+# Load zsh-defer itself eagerly (tiny). Everything below rides on it.
+source ${ZIM_HOME}/modules/zsh-defer/zsh-defer.plugin.zsh
 
-#
-# zsh-history-substring-search
-#
+# ============================================================================
+# DEFERRED · everything heavy, in order, after the first prompt
+# ============================================================================
 
-zmodload -F zsh/terminfo +p:terminfo
-# Bind ^[[A/^[[B manually so up/down works both before and after zle-line-init
-for key ('^[[A' '^P' ${terminfo[kcuu1]}) bindkey ${key} history-substring-search-up
-for key ('^[[B' '^N' ${terminfo[kcud1]}) bindkey ${key} history-substring-search-down
-unset key
-# }}} End configuration added by Zim install
+# 1) All Zim modules: completion/compinit, fzf-tab, fast-syntax-highlighting,
+#    autosuggestions, history-substring-search, autopair, magic-enter, wd, bat…
+zsh-defer source ${ZIM_HOME}/init.zsh
 
-export PATH="$HOME/.local/bin:$PATH"
+# 2) Config that needs those modules to already be loaded.
+_zshrc_after_zim() {
+  # history-substring-search: bind up/down (widgets exist only after the module).
+  zmodload -F zsh/terminfo +p:terminfo
+  local key
+  for key ('^[[A' '^P' ${terminfo[kcuu1]}) bindkey ${key} history-substring-search-up
+  for key ('^[[B' '^N' ${terminfo[kcud1]}) bindkey ${key} history-substring-search-down
 
-# magic-enter defaults
-MAGIC_ENTER_GIT_COMMAND='git status -u .'
-MAGIC_ENTER_OTHER_COMMAND='ls -lha .'
+  # fzf-tab / completion styling. Set after Zim's completion module so ours win.
+  zstyle ':completion:*:git-checkout:*' sort false
+  zstyle ':completion:*:descriptions' format '[%d]'
+  zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
+  zstyle ':completion:*' menu no
+  zstyle ':fzf-tab:complete:cd:*' fzf-preview 'eza -1 --color=always $realpath'
+  zstyle ':fzf-tab:*' fzf-flags --color=fg:1,fg+:2 --bind=tab:accept
+  zstyle ':fzf-tab:*' use-fzf-default-opts yes
+  zstyle ':fzf-tab:*' switch-group '<' '>'
 
-source <(fzf --zsh)
-fpath=(/Users/david/.docker/completions $fpath)
-# source <(kubectl completion zsh)
-export GOPATH=$HOME/go
-export PATH=$PATH:$HOME/go/bin
+  # magic-enter: bare Enter runs git status (in a repo) or a dir listing.
+  MAGIC_ENTER_GIT_COMMAND='git status -u .'
+  MAGIC_ENTER_OTHER_COMMAND='ls -lha .'
+  zstyle ':zshzoo:magic-enter' command 'ls -lha .'
+  zstyle ':zshzoo:magic-enter' git-command 'g status -u .'
 
-# Auto-update ~/.config from origin/main (hourly, silent auto-pull)
-() {
-  local stamp="/tmp/.config-last-check"
-  local interval=3600
-  if [[ -f "$stamp" ]]; then
-    local last=$(stat -f %m "$stamp" 2>/dev/null || echo 0)
-    local now=$(date +%s)
-    (( now - last < interval )) && return
+  # Lazy env managers (functions provided by the Zim lazy-load modules above):
+  # pyenv/rustup only initialise on first actual use.
+  command -v lazyload   >/dev/null && lazyload pyenv -- 'eval "$(pyenv init -)"'
+  command -v _lazy_load >/dev/null && _lazy_load rustup "rustup completions zsh > ~/.zfunc/_rustup"
+
+  # bun completions, if bun is installed.
+  [[ -s "$BUN_INSTALL/_bun" ]] && source "$BUN_INSTALL/_bun"
+
+  unset -f _zshrc_after_zim
+}
+zsh-defer _zshrc_after_zim
+
+# 3) fzf key bindings & completion (run the subprocess lazily, not at parse time).
+zsh-defer -c 'source <(fzf --zsh)'
+
+# 3b) zoxide: frecency-based `cd`. `--cmd cd` enhances `cd` itself (normal `cd path`
+#     still works; frecency kicks in otherwise, `cdi` opens an fzf picker) so the
+#     `z` alias stays pointed at zellij.
+zsh-defer -c 'eval "$(zoxide init zsh --cmd cd)"'
+
+# 4) fnm (a faster nvm): node PATH + auto-switch on `cd`, plus global yarn paths.
+#    https://github.com/Schniz/fnm/issues/87#issuecomment-751366346
+zsh-defer -c '
+  eval "$(fnm env --version-file-strategy=recursive --use-on-cd --shell zsh)"
+  export YARN_GLOBAL_FOLDER="$FNM_MULTISHELL_PATH/yarn-global"
+  export YARN_PREFIX="$FNM_MULTISHELL_PATH"
+'
+
+# 5) Startup-only housekeeping.
+_zshrc_housekeeping() {
+  # Install zellij on a machine that doesn't have it yet.
+  if ! command -v zellij >/dev/null; then
+    print 'zellij is not installed. Installing…'
+    brew install zellij
+  fi
+
+  # Source uncommitted local/work files last (credentials, work aliases): .IGNORE_*
+  local f
+  for f in $HOME/.config/zshrc/.IGNORE_*(N); do source $f; done
+
+  # Auto-update ~/.config from origin/main, at most hourly, in the background.
+  local stamp=/tmp/.config-last-check interval=3600
+  if [[ -f $stamp ]]; then
+    local last=$(stat -f %m "$stamp" 2>/dev/null || echo 0) now=$(date +%s)
+    (( now - last < interval )) && { unset -f _zshrc_housekeeping; return; }
   fi
   (
     cd ~/.config || return
     git fetch --quiet origin main 2>/dev/null || return
     touch "$stamp"
     [[ "$(git rev-parse HEAD)" == "$(git rev-parse origin/main)" ]] && return
-    git pull --ff-only origin main --quiet && print ".config updated from origin/main"
+    git pull --ff-only origin main --quiet && print '.config updated from origin/main'
   ) &!
-} 2>/dev/null
+  unset -f _zshrc_housekeeping
+}
+zsh-defer _zshrc_housekeeping
 
-# zsh-autocomplete settings
-# zstyle ':autocomplete:*' insert-unambiguous yes # stops zsh-autocomplete from taking the first available option
-# zstyle ':autocomplete:*' min-delay 0.2 # seconds
-# zstyle ':autocomplete:*' fzf-completion yes
-# setopt menu_complete
-
-# fzf-tab settings
-# disable sort when completing `git checkout`
-zstyle ':completion:*:git-checkout:*' sort false
-# set descriptions format to enable group support
-# NOTE: don't use escape sequences (like '%F{red}%d%f') here, fzf-tab will ignore them
-zstyle ':completion:*:descriptions' format '[%d]'
-# set list-colors to enable filename colorizing
-zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
-# force zsh not to show completion menu, which allows fzf-tab to capture the unambiguous prefix
-zstyle ':completion:*' menu no
-# preview directory's content with eza when completing cd
-zstyle ':fzf-tab:complete:cd:*' fzf-preview 'eza -1 --color=always $realpath'
-# custom fzf flags
-# NOTE: fzf-tab does not follow FZF_DEFAULT_OPTS by default
-zstyle ':fzf-tab:*' fzf-flags --color=fg:1,fg+:2 --bind=tab:accept
-# To make fzf-tab follow FZF_DEFAULT_OPTS.
-# NOTE: This may lead to unexpected behavior since some flags break this plugin. See Aloxaf/fzf-tab#455.
-zstyle ':fzf-tab:*' use-fzf-default-opts yes
-# switch group using `<` and `>`
-zstyle ':fzf-tab:*' switch-group '<' '>'
-
-# magic-enter settings
-zstyle ':zshzoo:magic-enter' command 'ls -lha .'
-zstyle ':zshzoo:magic-enter' git-command 'g status -u .'
-
-# load a faster nvm
-eval "$(fnm env --version-file-strategy=recursive --use-on-cd --shell zsh)"
-# set the global yarn bin
-# https://github.com/Schniz/fnm/issues/87#issuecomment-751366346
-export YARN_GLOBAL_FOLDER="$FNM_MULTISHELL_PATH/yarn-global"
-export YARN_PREFIX="$FNM_MULTISHELL_PATH"
-
-# Check if zellij is installed, and if not, install it using Homebrew
-if ! command -v zellij &> /dev/null; then
-    echo 'zellij is not installed. Installing...'
-    brew install zellij
+# ============================================================================
+# Profiling output  (true end of file)
+# ============================================================================
+if [[ -n ${ZSH_PROFILE_STARTUP:+x} ]]; then
+  zprof
 fi
-
-# load zellij
-alias z=zellij
-# alias c=cursor
-alias y=yarn
-alias yin='yarn install'
-export EDITOR='cursor'
-alias nvm='fnm'
-alias ls='eza -F --colour=auto --icons=auto'
-alias la='eza -F --colour=auto --icons=auto --all'
-alias ll='eza -F --colour=auto --icons=auto --oneline'
-alias lr='eza -F --colour=auto --oneline --icons=auto --recurse'
-alias lra='eza -F --colour=auto --oneline --icons=auto --all --recurse'
-alias grep='grep --color=auto'
-alias ghpc='gh pr checkout -f'
-
-# load git aliases
-source $HOME/.config/zshrc/git_aliases
-
-# lazy load near end of file
-lazy_load_func() {
-    unset -f lazy_load_func
-    # add our local functions dir to the fpath
-    local funcs=$HOME/.config/zshrc/functions
-    local work_funcs=$HOME/.config/zshrc/IGNORE_functions/
-
-    # FPATH is already tied to fpath, but this adds
-    # a uniqueness constraint to prevent duplicate entries
-    typeset -TUg +x FPATH=$funcs:$FPATH fpath
-    typeset -TUg +x FPATH=$work_funcs:$FPATH fpath
-
-    # Now autoload them
-    if [[ -d $funcs ]]; then
-        autoload ${=$(cd "$funcs" && echo *)}
-    fi
-    if [[ -d $work_funcs ]]; then
-        autoload ${=$(cd "$work_funcs" && echo *)}
-    fi
-}; lazy_load_func
-
-# source everything we don't want to commit
-# keep this near the end to make troubleshooting easier
-# ie credentials and work stuff
-# these files should follow the pattern `.IGNORE_*`
-if find $HOME/.config/zshrc/ -name ".IGNORE_*" | grep -q .; then
-    for file in $HOME/.config/zshrc/.IGNORE_*; do
-        source $file
-    done
-fi
-
-# use qooman/lazy-load to load slow env managers
-if [[ "$SHELL" =~ "zsh" ]] && command -v lazyload >/dev/null; then
-  lazyload pyenv -- 'eval "$(pyenv init -)"'
-
-  # Set PATH, MANPATH, etc., for Homebrew.
-  lazyload brew -- 'eval "$(/opt/homebrew/bin/brew shellenv)"'
-fi
-
-# use goarano/zsh-lazy-load to lazy load some completions
-_lazy_load rustup "rustup completions zsh > ~/.zfunc/_rustup"
-
-## PRINT PROFILING RESULTS
-if [ -n "${ZSH_PROFILE_STARTUP:+x}" ]
-then
-    zprof
-fi
-
-export STARSHIP_CONFIG=~/.config/starship/starship.toml
-eval "$(starship init zsh)"
-
-# bun completions
-[ -s "/Users/david.hoeppner/.bun/_bun" ] && source "/Users/david.hoeppner/.bun/_bun"
-
-# bun
-export BUN_INSTALL="$HOME/.bun"
-export PATH="$BUN_INSTALL/bin:$PATH"
-
-# pnpm
-export PNPM_HOME="/Users/david.hoeppner/Library/pnpm"
-case ":$PATH:" in
-  *":$PNPM_HOME:"*) ;;
-  *) export PATH="$PNPM_HOME:$PATH" ;;
-esac
-# pnpm end

@@ -1,3 +1,4 @@
+zmodule romkatv/zsh-defer -s 'zsh-defer.plugin.zsh' -f '.'
 zmodule duration-info
 zmodule zsh-users/zsh-completions --fpath src
 zmodule MichaelAquilina/zsh-you-should-use

@@ -1,50 +1,76 @@
-# zimrc
+# zshrc
 
-## Zsh Configuration (.zshrc)
-This directory contains the configuration files and scripts for setting up the Zsh shell environment. Below is an overview of how everything is set up and what each part does.
+Configuration for the Zsh shell. The main file is `.zshrc` (symlinked from `~/.zshrc`).
 
-## Overview
-The .zshrc file is the main configuration file for Zsh. It includes various settings, aliases, environment variables, and functions to customize the shell experience. Additionally, it sources other configuration files and scripts to modularize the setup.
+## Design: instant prompt, deferred everything-else
 
-## Structure
-1. Main Configuration (.zshrc): The primary configuration file that sets up the environment.
-1. Git Aliases (git_aliases): Contains Git command aliases for convenience.
-1. Ignore Files (.IGNORE_*): Files that contain sensitive or work-specific configurations that should not be committed to version control. These are local-only files that follow the same setup as the non-IGNORE files.
-1. Functions Directory (functions): Contains custom functions that are autoloaded into the shell.
-1. Work Functions Directory (IGNORE_functions): Contains work-specific functions that are also autoloaded.
+The `.zshrc` is split into two phases so a new terminal window/tab is usable almost
+immediately:
 
-## Detailed Setup
-### Zsh Configuration
-* History Settings: Configures history behavior, such as ignoring duplicate commands.
-* Input/Output Settings: Sets key bindings and other input/output options.
-* Zim Framework: Initializes and configures the Zim framework for managing Zsh modules.
-* Powerlevel10k: Configures the Powerlevel10k prompt for a visually appealing and informative prompt.
-#### Environment Variables
-* PATH: Adds custom directories to the PATH environment variable.
-* Homebrew: Sets up the environment for Homebrew.
-* Go: Configures the Go environment.
-* Editor: Sets the default editor to nvim.
+- **Eager** — the only work done before the first prompt paints: shell options,
+  `PATH`/environment, aliases, autoloaded functions, and the **starship** prompt. This
+  is a few milliseconds, so the shell is interactive right away and you can start typing.
+- **Deferred** — everything heavy is queued with [`zsh-defer`](https://github.com/romkatv/zsh-defer)
+  and runs once the line editor goes idle (right after the first prompt). This includes
+  the whole Zim module set (completion/`compinit`, fzf-tab, syntax highlighting,
+  autosuggestions, history-substring-search, autopair, magic-enter, wd, bat), plus `fnm`,
+  the `fzf` key bindings, `zoxide`, the lazy env managers, the zellij check, and the
+  hourly `~/.config` auto-pull.
+
+Trade-off: for the brief moment the deferred queue is draining, tab-completion / syntax
+highlighting / autosuggestions aren't active yet and `node` (fnm) isn't on `PATH`. In
+practice the queue drains faster than you can type a full command. To profile only the
+eager path: `ZSH_PROFILE_STARTUP=1 zsh -i -c exit` (deferred work runs after the prompt,
+so it won't show up in that zprof report).
+
+## Files in this directory
+
+1. **`.zshrc`** — the main configuration (eager + deferred sections described above).
+1. **`.zshenv` / `.zprofile`** — environment for all shells / login shells. Homebrew
+   (`brew shellenv`) is initialized in `.zprofile`, so it's on `PATH` before `.zshrc` runs.
+1. **`git_aliases`** — Git command aliases (currently `g=git`), sourced eagerly.
+1. **`functions/`** — custom functions (`note`, `editrc`, `c`, `lsf`, `cbn`,
+   `compare2main`, `newz`), autoloaded eagerly so they're available immediately.
+1. **`IGNORE_functions/`** — work-specific functions, autoloaded the same way if present.
+1. **`.IGNORE_*`** — uncommitted local/work files (credentials, work aliases). Sourced in
+   the deferred phase. Git-ignored; never committed.
+
+## What the `.zshrc` sets up
+
+#### Environment
+* **PATH**: `~/.local/bin`, Go (`$GOPATH/bin`), Bun (`$BUN_INSTALL/bin`), pnpm
+  (`$PNPM_HOME`). All paths are `$HOME`-relative so they work on any machine.
+* **Editor**: `EDITOR=cursor`.
+* **Prompt**: `starship` (`STARSHIP_CONFIG=~/.config/starship/starship.toml`).
+
 #### Aliases
-* General Aliases: Defines shortcuts for common commands, such as c=code and nvm="fnm".
-* Git Aliases: Sources the git_aliases file to load Git command shortcuts.
+* General: `z=zellij`, `y=yarn`, `yin='yarn install'`, `nvm=fnm`, `ls`/`la`/`ll`/`lr`/`lra`
+  → [eza](https://github.com/eza-community/eza), `grep --color`, `ghpc='gh pr checkout -f'`.
+* Git: sourced from `git_aliases`.
+
 #### Functions
-* Autoload Functions: Adds custom functions from the functions and IGNORE_functions directories to the fpath and autoloads them.
-* Ignore Files
-Sensitive and Work-Specific Configurations: Sources files matching the pattern .IGNORE_* to load sensitive or work-specific configurations without committing them to version control.
-#### Lazy Loading
-* Pyenv: Uses lazyload to load Pyenv only when needed.
-* FNM: Uses lazyload to load [FNM](https://github.com/Schniz/fnm) only when needed.
+* Custom functions from `functions/` and `IGNORE_functions/` are added to `fpath` and
+  autoloaded eagerly (fork-free glob — no subshells).
 
-## How to Use
-1. Clone the Repository: Clone this repository to your local machine with `git clone -C ~/.config https://github.com/dhoeppne/.config.git`
-1. Set Up Zsh: Ensure Zsh is installed and set as your default shell.
-1. Install Dependencies: Install any required dependencies, such as [Homebrew](https://brew.sh/) and [FNM](https://github.com/Schniz/fnm?tab=readme-ov-file#installation).
-1. Source the .zshrc File: link your .config zshrc to the home zshrc: `ln -s ~/.config/zshrc/.zshrc ~/.zshrc`
-1. Add Sensitive Configurations: Create .IGNORE_* files for any sensitive or work-specific configurations and place them in the appropriate directory.
-Example .IGNORE_* Files
-.IGNORE_credentials
-.IGNORE_work_zshrc
-/IGNORE_functions/<functions to ignore>
+#### Lazy / deferred loading
+* **Zim modules**: all loaded in the deferred phase (see [the zim README](../zim/README.md)).
+* **fnm**: node version manager, initialized in the deferred phase with `--use-on-cd`
+  (auto-switches node on `cd`).
+* **[zoxide](https://github.com/ajeetdsouza/zoxide)**: frecency-based directory jumping,
+  initialized deferred with `--cmd cd`. `cd path` still behaves normally; `cd <partial>`
+  jumps to the best-matching visited dir, and `cdi` opens an fzf picker. (`z` stays
+  aliased to zellij.)
+* **pyenv**: registered with `lazyload` — only initializes on first `pyenv` use.
+* **rustup completions**: registered with `_lazy_load` — generated on first `rustup` use.
 
+## How to use
+1. **Clone**: `git clone https://github.com/dhoeppne/.config.git ~/.config`
+1. **Default shell**: ensure Zsh is installed and set as your shell.
+1. **Dependencies**: install [Homebrew](https://brew.sh/), then the tools used here —
+   `brew install starship eza bat fzf fnm zoxide zellij` (zellij self-installs on first
+   run if missing). Zim and its modules install themselves on first launch.
+1. **Symlink**: `ln -s ~/.config/zshrc/.zshrc ~/.zshrc`
+1. **Local/work config**: add `.IGNORE_*` files for anything sensitive, e.g.
+   `.IGNORE_credentials`, `.IGNORE_work_zshrc`, and work functions under `IGNORE_functions/`.
 
-By following this setup, you can maintain a clean and organized Zsh configuration that is easy to manage and extend.
+Reload the shell after changes with `newz` (re-execs zsh).

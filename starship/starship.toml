@@ -1,10 +1,11 @@
 "$schema" = 'https://starship.rs/config-schema.json'
 
-# Default is 500ms which is too aggressive for:
-#   - git status on the space-flavor monorepo (>500ms is normal)
-#   - fnm's shim on cold cache when starship runs `node --version`
-# 1500ms is generous enough to never warn but still keeps the prompt snappy.
-command_timeout = 1500
+# Caps how long any single prompt module may run before starship gives up on it.
+# Keep this tight so a slow `git status` (e.g. the space-flavor monorepo) or a
+# cold fnm `node --version` shim can never stall the prompt for more than ~0.5s.
+# The trade-off: in a genuinely slow repo, git/version info may occasionally be
+# omitted rather than blocking the prompt — a deliberate choice for consistency.
+command_timeout = 500
 
 # the actual prompt
 

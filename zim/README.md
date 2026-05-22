@@ -1,43 +1,73 @@
-# Zimrc Configuration
-This README provides an overview of the Zim modules (zmodules) configured in the .zimrc file. Each module enhances the functionality of the Zsh shell in different ways.
+# zim
 
-### Zim Modules
+[Zim](https://github.com/zimfw/zimfw) is the Zsh plugin manager. Modules are declared in
+`.zimrc`; Zim compiles them into `~/.zim/init.zsh`.
+
+> **Note on load order:** `init.zsh` is **not** sourced eagerly. The `.zshrc` sources
+> `zsh-defer` first and then defers `init.zsh`, so all of the modules below load right
+> after the first prompt paints rather than blocking startup. See
+> [the zshrc README](../zshrc/README.md).
+
+## Modules (in `.zimrc` order)
+
+#### `romkatv/zsh-defer`
+Defers execution of a command until the line editor is idle. This is the engine behind
+the "instant prompt, load the rest in the background" setup — `.zshrc` sources its plugin
+file directly and uses it to defer everything else.
+
 #### `duration-info`
-* **Description**: Displays the duration of the last command in the prompt.
-* **Usage**: Helps you keep track of how long commands take to execute, which can be useful for performance monitoring and optimization.
-#### `zsh-users/zsh-completions`
-* **Description**: Provides additional completion definitions for Zsh.
-* **Usage**: Enhances the auto-completion capabilities of Zsh by adding more completion scripts for various commands and tools.
-#### `zsh-users/zsh-autosuggestions`
-* **Description**: Suggests commands as you type based on your command history and completions.
-* **Usage**: Improves efficiency by suggesting previously used commands, reducing the amount of typing required.
-#### `romkatv/powerlevel10k`
-* **Description**: A theme for Zsh that emphasizes speed, flexibility, and out-of-the-box experience.
-* **Usage**: Provides a highly customizable and visually appealing prompt with various features like Git status, command execution time, and more.
-#### `zsh-users/zsh-history-substring-search`
-* **Description**: Enables searching through your command history by substring.
-* **Usage**: Allows you to quickly find and reuse commands from your history by typing a part of the command.
-#### `qoomon/zsh-lazyload`
-* **Description**: Lazily loads Zsh plugins to improve shell startup time.
-* **Usage**: Optimizes the shell startup time by loading plugins only when they are needed.
-#### `zdharma-continuum/fast-syntax-highlighting`
-* **Description**: Provides syntax highlighting for Zsh commands.
-* **Usage**: Enhances the readability of commands by highlighting syntax errors and command structures in real-time.
-#### `zap-zsh/magic-enter`
-* **Description**: Adds custom behavior to the Enter key.
-* **Usage**: Allows you to define custom actions when pressing Enter, such as running a specific command or script.
-#### `mfaerevaag/wd`
-* **Description**: A command-line tool for managing directories.
-* **Usage**: Simplifies navigation between directories by allowing you to create shortcuts for frequently used paths.
-#### `marlonrichert/zsh-autocomplete`
-* **Description**: Provides fast and easy-to-use auto-completion for Zsh.
-* **Usage**: Enhances the auto-completion experience by providing more intelligent and responsive suggestions.
-#### `completion`
-* **Description**: A built-in Zim module for managing completions.
-* **Usage**: Ensures that all completion scripts are loaded and managed properly, providing a seamless auto-completion experience.
-### How to Use
-1. Install Zim: This should be handled when you use the .zshrc found in this repo. Ensure that Zim is installed and configured as your Zsh framework.
-1. Run `zimfw install` to install all of the above listed modules.
-1. Reload Zsh: Source your .zimrc file or restart your terminal to apply the changes; if you're using my .zshrc in this repo, simply run `newz`
+Displays the duration of the last command, for use in the prompt.
 
-By using these Zim modules, you can significantly enhance the functionality and user experience of your Zsh shell.
+#### `zsh-users/zsh-completions`
+Extra completion definitions for many commands and tools (added via `--fpath src`).
+
+#### `MichaelAquilina/zsh-you-should-use`
+Reminds you when an alias exists for a command you just typed in full.
+
+#### `fdellwing/zsh-bat`
+Integrates [bat](https://github.com/sharkdp/bat) as the pager / `man` colorizer.
+
+#### `hlissner/zsh-autopair`
+Auto-closes brackets and quotes as you type.
+
+#### `romkatv/zsh-prompt-benchmark`
+Benchmarks prompt latency (`zsh-prompt-benchmark`), useful for tuning.
+
+#### `zsh-users/zsh-history-substring-search`
+Search history by substring with the up/down arrows (bindings set in `.zshrc`).
+
+#### `Aloxaf/fzf-tab`
+Replaces the tab-completion menu with an fzf fuzzy picker (with eza-powered `cd` previews;
+styling configured in `.zshrc`).
+
+#### `zdharma-continuum/fast-syntax-highlighting`
+Real-time syntax highlighting of the command line.
+
+#### `qoomon/zsh-lazyload`
+Provides `lazyload`, used in `.zshrc` to defer `pyenv` init until first use.
+
+#### `goarano/zsh-lazy-load`
+Provides `_lazy_load`, used in `.zshrc` to defer `rustup` completion generation until
+first use.
+
+#### `zshzoo/magic-enter`
+Runs a default command on a bare Enter at an empty prompt (`git status` in a repo,
+otherwise a directory listing).
+
+#### `mfaerevaag/wd`
+"Warp directory" — bookmark directories and jump to them by name.
+
+#### `zsh-users/zsh-autosuggestions`
+Suggests commands as you type, based on history. Kept last so it can skip per-precmd
+widget rebinding (`ZSH_AUTOSUGGEST_MANUAL_REBIND=1` in `.zshrc`).
+
+#### `completion`
+Zim's built-in completion module. Runs `compinit` with a cached, compiled dumpfile for a
+fast, correct completion system.
+
+## How to use
+1. **Install**: Zim and the modules above install themselves on first launch when you use
+   the `.zshrc` from this repo. To do it manually: `zimfw install`.
+1. **After editing `.zimrc`**: `init.zsh` is rebuilt automatically on next launch (the
+   `.zshrc` compares `init.zsh` against `.zimrc`). To rebuild now: `zimfw build`.
+1. **Reload**: restart the terminal, or run `newz` (re-execs zsh).
