@@ -20,4 +20,5 @@ nvim
 .vscode
 pip
 yarn/link
+gcloud
 jj/repos/**/*
