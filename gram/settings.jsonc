@@ -7,6 +7,11 @@
 // custom settings, run `gram: open default settings` from the
 // command palette (cmd-shift-p / ctrl-shift-p)
 {
+  "node": {
+    "allow_binary_download": false,
+    "npm_path": "/Users/david/.local/state/fnm_multishells/1586_1780587250283/bin/npm",
+    "path": "/Users/david/.local/state/fnm_multishells/1586_1780587250283/bin/node"
+  },
   "sticky_scroll": {
     "enabled": true,
   },
@@ -46,6 +51,19 @@
   "base_keymap": "VSCode",
   "autoscroll_on_clicks": true,
   "lsp": {
+    "gleam": {
+      "binary": {
+        "allow_binary_download": true,
+        "enable_auto_updates": true
+      },
+      "enable_lsp_tasks": true
+    },
+    "taplo": {
+      "binary": {
+        "allow_binary_download": true
+      },
+      "enable_lsp_tasks": true
+    },
     "yaml-language-server": {
       "binary": {
         "allow_binary_download": true,
@@ -94,10 +112,6 @@
       },
       "enable_lsp_tasks": true,
     },
-  },
-  "node": {
-    "npm_path": "yarn",
-    "allow_binary_download": false,
   },
   "restore_on_startup": "last_workspace",
   "redact_private_values": false,
