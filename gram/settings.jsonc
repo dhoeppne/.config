@@ -8,10 +8,21 @@
 // command palette (cmd-shift-p / ctrl-shift-p)
 {
   "node": {
-    "allow_binary_download": false,
-    "npm_path": "/Users/david/.local/state/fnm_multishells/1586_1780587250283/bin/npm",
-    "path": "/Users/david/.local/state/fnm_multishells/1586_1780587250283/bin/node"
+    "allow_binary_download": true
   },
+  "ssh_connections": [
+    {
+      "host": "10.0.0.39",
+      "username": "david",
+      "args": [],
+      "projects": [
+        {
+          "paths": ["/home/david"],
+        },
+      ],
+      "nickname": "hyperion",
+    },
+  ],
   "sticky_scroll": {
     "enabled": true,
   },
@@ -51,18 +62,42 @@
   "base_keymap": "VSCode",
   "autoscroll_on_clicks": true,
   "lsp": {
+    "ruff": {
+      "binary": {
+        "allow_binary_download": true,
+      },
+      "enable_lsp_tasks": true,
+    },
+    "basedpyright": {
+      "binary": {
+        "allow_binary_download": true,
+      },
+      "enable_lsp_tasks": true,
+    },
+    "rust-analyzer": {
+      "binary": {
+        "allow_binary_download": true,
+      },
+      "enable_lsp_tasks": true,
+    },
+    "superhtml": {
+      "binary": {
+        "allow_binary_download": true,
+      },
+      "enable_lsp_tasks": true,
+    },
     "gleam": {
       "binary": {
         "allow_binary_download": true,
-        "enable_auto_updates": true
+        "enable_auto_updates": true,
       },
-      "enable_lsp_tasks": true
+      "enable_lsp_tasks": true,
     },
     "taplo": {
       "binary": {
-        "allow_binary_download": true
+        "allow_binary_download": true,
       },
-      "enable_lsp_tasks": true
+      "enable_lsp_tasks": true,
     },
     "yaml-language-server": {
       "binary": {
