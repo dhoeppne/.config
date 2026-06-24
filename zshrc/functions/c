@@ -2,6 +2,6 @@ function c() {
   if ! command -v cursor &> /dev/null; then
     gram $1
   else
-    c $1
+    cursor $1
   fi
 }

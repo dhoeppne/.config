@@ -7,6 +7,8 @@
 # typing immediately and the rest (Zim plugins, completion, fnm, fzf) streams in
 # a few milliseconds later.
 
+export XDG_CONFIG_HOME=$HOME/.config
+
 # ============================================================================
 # Profiling  (opt-in: `ZSH_PROFILE_STARTUP=1 zsh -i -c exit`)
 # Only EAGER startup is captured here. Deferred work runs after the first prompt,
@@ -55,8 +57,8 @@ export STARSHIP_CONFIG=~/.config/starship/starship.toml
 # EAGER · aliases
 # ============================================================================
 alias z=zellij
-alias y=yarn
-alias yin='yarn install'
+alias p=pnpm
+alias pin='pnpm install'
 alias nvm='fnm'
 alias ls='eza -F --colour=auto --icons=auto'
 alias la='eza -F --colour=auto --icons=auto --all'
