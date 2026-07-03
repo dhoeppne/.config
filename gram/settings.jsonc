@@ -17,11 +17,23 @@
       "args": [],
       "projects": [
         {
-          "paths": ["/home/david"],
+          "paths": [
+            "/home/david"
+          ]
         },
+        {
+          "paths": [
+            "/home/david/appdata"
+          ]
+        },
+        {
+          "paths": [
+            "/home/david/appdata/appdaemon"
+          ]
+        }
       ],
-      "nickname": "hyperion",
-    },
+      "nickname": "hyperion"
+    }
   ],
   "sticky_scroll": {
     "enabled": true,
