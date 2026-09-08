@@ -29,6 +29,7 @@
 	# repos. Requires git >= 2.37.
 	fsmonitor = true
 	untrackedCache = true
+	editr = vim
 
 # Work-only overrides (email, company-internal credential helpers, etc.)
 # live in an uncommitted file next to this one. The filename contains
@@ -38,3 +39,5 @@
 # required = ...). Each machine scaffolds its own copy via install.sh.
 [include]
 	path = ~/.config/git/IGNORE_work_config
+[sequence]
+	editor = vim

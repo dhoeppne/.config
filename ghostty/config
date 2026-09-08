@@ -9,7 +9,7 @@ theme = TokyoNight Storm
 # ── Window ────────────────────────────────────────────────
 background-opacity = 0.9
 background-blur = 30
-scrollback-limit = 1000000
+scrollback-limit = 10000000
 
 # ── Shell integration ─────────────────────────────────────
 shell-integration = detect

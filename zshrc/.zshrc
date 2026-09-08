@@ -53,6 +53,15 @@ esac
 export EDITOR='cursor'
 export STARSHIP_CONFIG=~/.config/starship/starship.toml
 
+# fnm eagerly (node on PATH). Interactive shells reach here but skip ~/.zprofile
+# (login-only), so this covers Claude Code's Bash tool; guarded so a full login
+# terminal that already ran the ~/.zprofile copy doesn't eval it twice.
+if [[ -z "$FNM_MULTISHELL_PATH" ]] && command -v fnm >/dev/null; then
+    eval "$(fnm env --version-file-strategy=recursive --use-on-cd --shell zsh)"
+    export YARN_GLOBAL_FOLDER="$FNM_MULTISHELL_PATH/yarn-global"
+    export YARN_PREFIX="$FNM_MULTISHELL_PATH"
+fi
+
 # ============================================================================
 # EAGER · aliases
 # ============================================================================
@@ -164,13 +173,9 @@ zsh-defer -c 'source <(fzf --zsh)'
 #     `z` alias stays pointed at zellij.
 zsh-defer -c 'eval "$(zoxide init zsh --cmd cd)"'
 
-# 4) fnm (a faster nvm): node PATH + auto-switch on `cd`, plus global yarn paths.
-#    https://github.com/Schniz/fnm/issues/87#issuecomment-751366346
-zsh-defer -c '
-  eval "$(fnm env --version-file-strategy=recursive --use-on-cd --shell zsh)"
-  export YARN_GLOBAL_FOLDER="$FNM_MULTISHELL_PATH/yarn-global"
-  export YARN_PREFIX="$FNM_MULTISHELL_PATH"
-'
+# 4) fnm (a faster nvm): initialized eagerly in ~/.zprofile instead of here, so
+#    non-interactive/agent shells (Cursor, Claude Code) get node on PATH too.
+#    zsh-defer only fires on ZLE idle, which never happens for `zsh -c`.
 
 # 5) Startup-only housekeeping.
 _zshrc_housekeeping() {
