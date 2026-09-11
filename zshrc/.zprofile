@@ -15,8 +15,11 @@ fi
 # shells spawned by IDEs (Cursor, Claude Code) get node too — not just
 # interactive terminals. This must NOT be deferred: zsh-defer only fires on
 # ZLE idle, which never happens for one-off `zsh -c` command execution.
-if [[ -z "$FNM_MULTISHELL_PATH" ]] && command -v fnm >/dev/null; then
+if [[ -z "$_FNM_ENV_LOADED" ]] && command -v fnm >/dev/null; then
     eval "$(fnm env --version-file-strategy=recursive --use-on-cd --shell zsh)"
+    # Must NOT be exported: children inherit FNM_MULTISHELL_PATH, and guarding on
+    # that skipped the eval — and with it the chpwd hook — in every nested shell.
+    typeset -g _FNM_ENV_LOADED=1
     export YARN_GLOBAL_FOLDER="$FNM_MULTISHELL_PATH/yarn-global"
     export YARN_PREFIX="$FNM_MULTISHELL_PATH"
 fi

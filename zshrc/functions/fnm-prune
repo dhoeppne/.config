@@ -1,0 +1,26 @@
+# removes stale fnm multishell symlinks. fnm creates one per shell (`fnm env`)
+# and never cleans them up, so they pile up into the thousands.
+# links owned by a still-running pid are kept: deleting one strips node from
+# that shell's PATH. pid reuse only delays a prune until the next run.
+# usage: fnm-prune [-q]
+function fnm-prune() {
+  local quiet=false
+  [[ "$1" == "-q" ]] && quiet=true
+
+  local dir=$HOME/.local/state/fnm_multishells
+  [[ -d $dir ]] || return 0
+
+  local link pid removed=0 kept=0
+  for link in $dir/*; do
+    [[ -L $link ]] || continue
+    pid=${${link:t}%%_*}
+    if kill -0 $pid 2>/dev/null; then
+      (( kept++ ))
+    else
+      rm -f -- $link && (( removed++ ))
+    fi
+  done
+
+  $quiet || print "fnm-prune: removed $removed stale, kept $kept live"
+  return 0
+}

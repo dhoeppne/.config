@@ -56,8 +56,11 @@ export STARSHIP_CONFIG=~/.config/starship/starship.toml
 # fnm eagerly (node on PATH). Interactive shells reach here but skip ~/.zprofile
 # (login-only), so this covers Claude Code's Bash tool; guarded so a full login
 # terminal that already ran the ~/.zprofile copy doesn't eval it twice.
-if [[ -z "$FNM_MULTISHELL_PATH" ]] && command -v fnm >/dev/null; then
+if [[ -z "$_FNM_ENV_LOADED" ]] && command -v fnm >/dev/null; then
     eval "$(fnm env --version-file-strategy=recursive --use-on-cd --shell zsh)"
+    # Must NOT be exported: children inherit FNM_MULTISHELL_PATH, and guarding on
+    # that skipped the eval — and with it the chpwd hook — in every nested shell.
+    typeset -g _FNM_ENV_LOADED=1
     export YARN_GLOBAL_FOLDER="$FNM_MULTISHELL_PATH/yarn-global"
     export YARN_PREFIX="$FNM_MULTISHELL_PATH"
 fi
@@ -188,6 +191,17 @@ _zshrc_housekeeping() {
   # Source uncommitted local/work files last (credentials, work aliases): .IGNORE_*
   local f
   for f in $HOME/.config/zshrc/.IGNORE_*(N); do source $f; done
+
+  # Prune fnm's stale multishell links (it never does), at most daily, detached:
+  # a sweep of a large backlog takes ~1s. `(Nmh-24)` matches only if the stamp was
+  # touched within 24h, so the common case costs no forks. Must stay above the
+  # early return below.
+  local fnm_stamp=/tmp/.fnm-prune-last-run
+  local -a fnm_fresh=( $fnm_stamp(Nmh-24) )
+  if (( ! $#fnm_fresh )); then
+    touch "$fnm_stamp"
+    ( fnm-prune -q ) &!
+  fi
 
   # Auto-update ~/.config from origin/main, at most hourly, in the background.
   local stamp=/tmp/.config-last-check interval=3600
