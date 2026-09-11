@@ -30,6 +30,11 @@
           "paths": [
             "/home/david/appdata/appdaemon"
           ]
+        },
+        {
+          "paths": [
+            "/srv/agents/work"
+          ]
         }
       ],
       "nickname": "hyperion"

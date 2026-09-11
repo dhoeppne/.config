@@ -50,7 +50,7 @@ case ":$PATH:" in
   *) export PATH="$PNPM_HOME:$PATH" ;;
 esac
 
-export EDITOR='cursor'
+export EDITOR='vi'
 export STARSHIP_CONFIG=~/.config/starship/starship.toml
 
 # fnm eagerly (node on PATH). Interactive shells reach here but skip ~/.zprofile
@@ -64,6 +64,8 @@ if [[ -z "$_FNM_ENV_LOADED" ]] && command -v fnm >/dev/null; then
     export YARN_GLOBAL_FOLDER="$FNM_MULTISHELL_PATH/yarn-global"
     export YARN_PREFIX="$FNM_MULTISHELL_PATH"
 fi
+
+export SOPS_AGE_KEY_FILE="$HOME/Library/Application Support/sops/age/keys.txt"
 
 # ============================================================================
 # EAGER · aliases
@@ -79,6 +81,7 @@ alias lr='eza -F --colour=auto --oneline --icons=auto --recurse'
 alias lra='eza -F --colour=auto --oneline --icons=auto --all --recurse'
 alias grep='grep --color=auto'
 alias ghpc='gh pr checkout -f'
+alias ai='agentctl tui dev-mac'
 source $HOME/.config/zshrc/git_aliases   # alias g=git
 
 # ============================================================================
