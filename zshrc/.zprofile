@@ -22,4 +22,9 @@ if [[ -z "$_FNM_ENV_LOADED" ]] && command -v fnm >/dev/null; then
     typeset -g _FNM_ENV_LOADED=1
     export YARN_GLOBAL_FOLDER="$FNM_MULTISHELL_PATH/yarn-global"
     export YARN_PREFIX="$FNM_MULTISHELL_PATH"
+
+    # `fnm env` only links the *default* version; it never reads .node-version
+    # for the dir the shell STARTS in (its chpwd hook fires on cd, not at init).
+    # Without this, a shell opened straight into a project stays on default.
+    fnm use --silent-if-unchanged 2>/dev/null || true
 fi

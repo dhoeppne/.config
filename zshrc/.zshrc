@@ -63,6 +63,14 @@ if [[ -z "$_FNM_ENV_LOADED" ]] && command -v fnm >/dev/null; then
     typeset -g _FNM_ENV_LOADED=1
     export YARN_GLOBAL_FOLDER="$FNM_MULTISHELL_PATH/yarn-global"
     export YARN_PREFIX="$FNM_MULTISHELL_PATH"
+
+    # `fnm env` only links the *default* version and registers the chpwd hook —
+    # it never reads .node-version for the dir the shell STARTS in. Back when
+    # this was deferred, zsh-defer's PWD restore incidentally fired chpwd, so the
+    # pinned version got picked up by accident. Eager init lost that, leaving new
+    # tabs on default (v24.17.0) where `pnpm` isn't installed, until you ran
+    # `fnm use` or re-`cd`'d. Apply the pinned version explicitly instead.
+    fnm use --silent-if-unchanged 2>/dev/null || true
 fi
 
 export SOPS_AGE_KEY_FILE="$HOME/Library/Application Support/sops/age/keys.txt"
