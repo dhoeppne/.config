@@ -68,8 +68,10 @@ if [[ -z "$_FNM_ENV_LOADED" ]] && command -v fnm >/dev/null; then
     # it never reads .node-version for the dir the shell STARTS in. Back when
     # this was deferred, zsh-defer's PWD restore incidentally fired chpwd, so the
     # pinned version got picked up by accident. Eager init lost that, leaving new
-    # tabs on default (v24.17.0) where `pnpm` isn't installed, until you ran
-    # `fnm use` or re-`cd`'d. Apply the pinned version explicitly instead.
+    # tabs on the default node instead of the project's, until you ran `fnm use`
+    # or re-`cd`'d. Apply the pinned version explicitly instead.
+    # (pnpm comes from Homebrew, not per-version corepack shims, so it exists
+    # under every node version and self-switches to `packageManager`.)
     fnm use --silent-if-unchanged 2>/dev/null || true
 fi
 
