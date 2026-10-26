@@ -15,4 +15,5 @@ end):start()
 hs.notify.show("Hammerspoon", "", "Config loaded")
 
 -- Load work-only modules (IGNORE_ prefix is not committed to the config repo)
-pcall(require, "IGNORE_slack")
+-- pcall(require, "IGNORE_slack")
+pcall(require, "IGNORE_work")
