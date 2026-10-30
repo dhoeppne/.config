@@ -25,3 +25,5 @@ jj/repos/**/*
 homebrew
 workday-sandbox
 prq/config.toml
+uv/
+wds
