@@ -65,7 +65,11 @@
       "soft_wrap": "editor_width",
     },
     "Markdown": {
-      "format_on_save": "on",
+      "show_wrap_guides": false,
+      "soft_wrap": "preferred_line_length",
+      "auto_indent_on_paste": true,
+      "auto_indent": true,
+      "format_on_save": "off",
       "enable_language_server": true,
       "use_auto_surround": true,
     },
