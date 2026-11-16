@@ -84,16 +84,17 @@ if [[ -z "$_FNM_ENV_LOADED" ]] && command -v fnm >/dev/null; then
     export YARN_GLOBAL_FOLDER="$FNM_MULTISHELL_PATH/yarn-global"
     export YARN_PREFIX="$FNM_MULTISHELL_PATH"
 
-    # `fnm env` only links the *default* version and registers the chpwd hook —
-    # it never reads .node-version for the dir the shell STARTS in. Back when
-    # this was deferred, zsh-defer's PWD restore incidentally fired chpwd, so the
-    # pinned version got picked up by accident. Eager init lost that, leaving new
-    # tabs on the default node instead of the project's, until you ran `fnm use`
-    # or re-`cd`'d. Apply the pinned version explicitly instead.
-    # (pnpm comes from Homebrew, not per-version corepack shims, so it exists
-    # under every node version and self-switches to `packageManager`.)
+    # Start-folder version: fnm 1.39 (tested 2026-11-16) already switches to the
+    # version pinned for $PWD inside `fnm env --use-on-cd`, and prints
+    # "Using Node vX" to stderr. Older fnm only linked the default version, so
+    # a tab opened in a project stayed on default until the first `cd`. The
+    # `fnm use` below is the fallback for older fnm (e.g. another machine). On
+    # fnm 1.39 it changes nothing (--silent-if-unchanged). Delete this block
+    # once every machine runs fnm 1.39 or newer.
     # Only fork `fnm use` when a version file exists here or in a parent (same
     # pure-zsh walk as in ~/.zprofile).
+    # (pnpm comes from Homebrew, not per-version corepack shims, so it exists
+    # under every node version and self-switches to `packageManager`.)
     () {
         local d=$PWD
         until [[ -e $d/.node-version || -e $d/.nvmrc || -e $d/package.json ]]; do

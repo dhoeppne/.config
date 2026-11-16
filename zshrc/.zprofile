@@ -47,9 +47,13 @@ if [[ -z "$_FNM_ENV_LOADED" ]] && command -v fnm >/dev/null; then
     export YARN_GLOBAL_FOLDER="$FNM_MULTISHELL_PATH/yarn-global"
     export YARN_PREFIX="$FNM_MULTISHELL_PATH"
 
-    # `fnm env` only links the *default* version; it never reads .node-version
-    # for the dir the shell STARTS in (its chpwd hook fires on cd, not at init).
-    # Without this, a shell opened straight into a project stays on default.
+    # Start-folder version: fnm 1.39 (tested 2026-11-16) already switches to the
+    # version pinned for $PWD inside `fnm env --use-on-cd`, and prints
+    # "Using Node vX" to stderr. Older fnm only linked the default version (its
+    # chpwd hook fires on cd, not at init), so a shell opened in a project stayed
+    # on default. The `fnm use` below is the fallback for older fnm. On fnm 1.39
+    # it changes nothing (--silent-if-unchanged). Delete this block once every
+    # machine runs fnm 1.39 or newer.
     # Only fork `fnm use` when a version file exists here or in a parent
     # (fnm's recursive strategy + resolve-engines read these three files).
     # Pure-zsh walk, no forks: saves ~10 ms everywhere else (e.g. ~).

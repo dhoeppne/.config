@@ -52,8 +52,9 @@ so it won't show up in that zprof report).
 * **Prompt**: `starship` (`STARSHIP_CONFIG=~/.config/starship/starship.toml`).
 
 #### Aliases
-* General: `z=zellij`, `y=yarn`, `yin='yarn install'`, `nvm=fnm`, `ls`/`la`/`ll`/`lr`/`lra`
-  → [eza](https://github.com/eza-community/eza), `grep --color`, `ghpc='gh pr checkout -f'`.
+* General: `z=zellij`, `p=pnpm`, `pin='pnpm install'`, `nvm=fnm`, `ls`/`la`/`ll`/`lr`/`lra`
+  → [eza](https://github.com/eza-community/eza), `grep --color`, `ghpc='gh pr checkout -f'`,
+  `ai='agentctl tui dev-mac'`.
 * Git: sourced from `git_aliases`.
 
 #### Functions
@@ -65,7 +66,9 @@ so it won't show up in that zprof report).
 * **fnm**: node version manager, initialized **eagerly** with `--use-on-cd`
   (auto-switches node on `cd`): in `.zprofile` for login shells, and in `.zshrc` for
   interactive non-login shells. It is not deferred, because agent shells (`zsh -c`)
-  never reach the deferred phase.
+  never reach the deferred phase. A new shell opened in a project starts on that
+  project's pinned version: fnm 1.39 does this inside `fnm env` and prints
+  `Using Node vX`. A guarded `fnm use` covers older fnm versions.
 * **[zoxide](https://github.com/ajeetdsouza/zoxide)**: frecency-based directory jumping,
   initialized deferred with `--cmd cd`. `cd path` still behaves normally; `cd <partial>`
   jumps to the best-matching visited dir, and `cdi` opens an fzf picker. (`z` stays
