@@ -1,0 +1,7 @@
+# tealdeer (`tldr`) config. Tracked in ~/.config, so it is shared with the personal Mac.
+[updates]
+# No background downloads. Run `tldr --update` by hand.
+auto_update = false
+# Trust the macOS keychain roots. The default bundled roots do not trust a
+# TLS-inspecting corporate proxy, so `tldr --update` fails behind one.
+tls_backend = "rustls-with-native-roots"

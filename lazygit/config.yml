@@ -1,0 +1,14 @@
+# lazygit config. Tracked in ~/.config, so it is shared with the personal Mac.
+# lazygit finds this file through $XDG_CONFIG_HOME (exported in .zshrc). Without
+# that variable, macOS lazygit reads ~/Library/Application Support/lazygit.
+
+# No update checks: Homebrew handles upgrades.
+update:
+  method: never
+
+git:
+  # Cycle renderers with `|`. delta matches the terminal's dark/light background.
+  diffRenderers:
+    - command: delta --{{colorScheme}} --paging=never
+    - type: rawGit
+      name: plain git

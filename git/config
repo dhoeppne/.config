@@ -30,6 +30,17 @@
 	fsmonitor = false
 	untrackedCache = true
 	editr = vim
+	# delta: syntax-highlighted diffs. Guarded so `git diff` still works on a
+	# machine without delta (falls back to git's default `less`).
+	pager = "if command -v delta >/dev/null 2>&1; then delta; else less; fi"
+
+[interactive]
+	# Colors `git add -p` hunks with delta; plain passthrough without it.
+	diffFilter = "if command -v delta >/dev/null 2>&1; then delta --color-only; else cat; fi"
+
+[delta]
+	navigate = true      # n / N jump between files in the pager
+	line-numbers = true
 
 # Work-only overrides (email, company-internal credential helpers, etc.)
 # live in an uncommitted file next to this one. The filename contains
