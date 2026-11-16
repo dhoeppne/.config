@@ -72,7 +72,16 @@ if [[ -z "$_FNM_ENV_LOADED" ]] && command -v fnm >/dev/null; then
     # or re-`cd`'d. Apply the pinned version explicitly instead.
     # (pnpm comes from Homebrew, not per-version corepack shims, so it exists
     # under every node version and self-switches to `packageManager`.)
-    fnm use --silent-if-unchanged 2>/dev/null || true
+    # Only fork `fnm use` when a version file exists here or in a parent (same
+    # pure-zsh walk as in ~/.zprofile).
+    () {
+        local d=$PWD
+        until [[ -e $d/.node-version || -e $d/.nvmrc || -e $d/package.json ]]; do
+            [[ $d == /?* ]] || return 0   # stop at / (or a non-absolute PWD)
+            d=${d:h}
+        done
+        fnm use --silent-if-unchanged 2>/dev/null || true
+    }
 fi
 
 export SOPS_AGE_KEY_FILE="$HOME/Library/Application Support/sops/age/keys.txt"
@@ -112,7 +121,35 @@ source $HOME/.config/zshrc/git_aliases   # alias g=git
 # ============================================================================
 # EAGER · prompt, then the deferral tool
 # ============================================================================
-eval "$(starship init zsh)"
+# Starship init comes from a cache file. That skips two forks per shell
+# (~45 ms): `starship init` and the `starship prompt --continuation` call that
+# fills PROMPT2 (its value is baked into the cache). The cache is rebuilt when:
+#  - it is missing,
+#  - the starship binary or starship.toml is newer than it,
+#  - the starship path changed (the first line records the starship path and
+#    its resolved target, which holds the version for Homebrew installs).
+# The path comes from a glob over $path, not $commands[starship]: the `rehash`
+# in `fnm env` empties the command table, and a $commands lookup then rescans
+# every PATH folder (~5 ms). The glob gives the same first match.
+# The function only refreshes the file. `source` stays at top level so the init
+# runs in global scope.
+_zshrc_starship_cache=${XDG_CACHE_HOME:-$HOME/.cache}/zsh/starship-init.zsh
+() {
+  local -a found=( ${^path}/starship(N-*) )
+  local bin=$found[1] cache=$_zshrc_starship_cache
+  [[ -n $bin ]] || { unset _zshrc_starship_cache; return 0; }
+  local stamp="# starship-init-cache: $bin ${bin:A}" first=
+  [[ -r $cache ]] && read -r first < $cache
+  [[ $first == $stamp && ! $bin -nt $cache && ! $STARSHIP_CONFIG -nt $cache ]] && return 0
+  local init p2
+  init=$("$bin" init zsh --print-full-init) || { unset _zshrc_starship_cache; return 0; }
+  p2=$(STARSHIP_SHELL=zsh "$bin" prompt --continuation) &&
+    init=${init/PROMPT2=\"\$\(*prompt --continuation\)\"/PROMPT2=\'${p2//\'/\'\\\'\'}\'}
+  mkdir -p ${cache:h}
+  print -r -- "$stamp"$'\n'"$init" >| $cache.$$ && mv -f $cache.$$ $cache
+}
+[[ -n $_zshrc_starship_cache && -r $_zshrc_starship_cache ]] && source $_zshrc_starship_cache
+unset _zshrc_starship_cache
 
 # Zim bootstrap. The checks are cheap and kept eager so `init.zsh` is guaranteed
 # fresh; only the expensive `source init.zsh` itself is deferred (below).
