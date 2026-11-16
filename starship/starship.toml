@@ -11,7 +11,6 @@ command_timeout = 500
 
 format = """
 [](color_orange)\
-$os\
 $username\
 [](bg:color_yellow fg:color_orange)\
 $directory\
@@ -27,10 +26,13 @@ $php\
 $java\
 $kotlin\
 $haskell\
+$python\
 [](fg:color_blue bg:color_bg3)\
 $docker_context\
 $conda\
 [](fg:color_bg3 bg:color_bg1)\
+$cmd_duration\
+$status\
 $time\
 [ ](fg:color_bg1)\
 $line_break$character"""
@@ -49,12 +51,15 @@ color_purple = '#b16286'
 color_red = '#cc241d'
 color_yellow = '#d79921'
 
+# Not in `format`: `starship timings` showed ~30-48 ms per prompt just to
+# detect the OS. Kept disabled so re-adding $os is a deliberate choice.
 [os]
-disabled = false
+disabled = true
 style = "bg:color_orange fg:color_fg0"
 
+# Shown only over SSH or as root.
 [username]
-show_always = true
+show_always = false
 style_user = "bg:color_orange fg:color_fg0"
 style_root = "bg:color_orange fg:color_fg0"
 format = '[ $user ]($style)'
@@ -62,12 +67,28 @@ format = '[ $user ]($style)'
 [directory]
 style = "fg:color_fg0 bg:color_yellow"
 format = "[ $path ]($style)"
+truncate_to_repo = true
 truncation_length = 3
 truncation_symbol = "…/"
 read_only = " 󰌾"
 
 [line_break]
 disabled = false
+
+# Long-running command: shown only when it took >= 2 s.
+[cmd_duration]
+min_time = 2000
+style = "bg:color_bg1"
+format = '[[  $duration ](fg:color_yellow bg:color_bg1)]($style)'
+
+# Exit code of the last command: shown only on failure, as a red
+# powerline segment inside the dark time segment. Signals add the name
+# (e.g. 130 SIGINT).
+[status]
+disabled = false
+symbol = ""
+style = "bg:color_red"
+format = '[](fg:color_bg1 bg:color_red)[ $symbol $status( SIG$signal_name) ](fg:color_fg0 bg:color_red)[](fg:color_red bg:color_bg1)'
 
 # symbols
 [aws]
@@ -157,7 +178,10 @@ format = '[[ $symbol $branch ](fg:color_fg0 bg:color_aqua)]($style)'
 [git_commit]
 tag_symbol = '  '
 
+# Starship >= 1.23 computes status with gitoxide, which ignores git's
+# untracked cache and fsmonitor: 2-4x slower in the big monorepos here.
 [git_status]
+use_git_executable = true
 style = "bg:color_aqua"
 format = '[[($all_status$ahead_behind )](fg:color_fg0 bg:color_aqua)]($style)'
 
@@ -297,10 +321,13 @@ symbol = ""
 [purescript]
 format = '(via [$symbol($version )]($style))'
 
+# `.python-version` alone is not a trigger: JS repos that carry a stale pin
+# make the pyenv `python` shim fail slowly (~0.5 s, the command_timeout).
 [python]
 symbol = ""
-format = '(via [${symbol}${pyenv_prefix}(${version} )(\($virtualenv\) )(fg:color_fg0 bg:color_blue)]($style))'
+detect_files = ["requirements.txt", "pyproject.toml", "Pipfile", "tox.ini", "setup.py", "__init__.py"]
 style = "bg:color_blue"
+format = '[[ $symbol( $version)( \($virtualenv\)) ](fg:color_fg0 bg:color_blue)]($style)'
 
 [raku]
 format = '(via [$symbol($version-$vm_version )]($style))'
