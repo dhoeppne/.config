@@ -9,14 +9,23 @@ theme = TokyoNight Storm
 # ── Window ────────────────────────────────────────────────
 background-opacity = 0.9
 background-blur = 30
-scrollback-limit = 10000000
+# Unit is bytes, not lines: 100000000 = 100 MB (default is 10 MB)
+scrollback-limit = 100000000
 
 # ── Shell integration ─────────────────────────────────────
 shell-integration = detect
+# ssh-terminfo: on first SSH to a host, Ghostty installs its terminfo into
+#   the remote ~/.terminfo (this includes work hosts reached via cnssh).
+# ssh-env: falls back to TERM=xterm-256color if that install fails, and
+#   forwards COLORTERM / TERM_PROGRAM.
+# Unlisted features (cursor, title, sudo, path) keep their defaults.
+shell-integration-features = ssh-terminfo,ssh-env
 
 # ── macOS option key ──────────────────────────────────────
-# Keep macOS compose behavior; word-nav handled by explicit binds below
-macos-option-as-alt = false
+# Left Option = Alt (Alt+. , Alt+b/f in zsh). Right Option keeps macOS
+# compose behavior, so it still types ü, €, and similar characters.
+# Word-nav binds below stay as an explicit fallback.
+macos-option-as-alt = left
 
 # ── URL handling ──────────────────────────────────────────
 link-url = true
@@ -27,9 +36,8 @@ link-url = true
 keybind = opt+left=esc:b
 keybind = opt+right=esc:f
 
-# Pane splits
-keybind = ctrl+v=new_split:right
-keybind = ctrl+h=new_split:down
+# Pane splits: use Ghostty defaults cmd+d (right) and cmd+shift+d (down).
+# Ctrl+V / Ctrl+H stay free for vim, zsh, and zellij.
 
 # Leader key sequences (Cmd+Shift+F > key)
 keybind = super+shift+f>w=close_surface
