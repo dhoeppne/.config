@@ -28,6 +28,13 @@
   [[ :${INFOPATH-}: == *:$p/share/info:* ]] || export INFOPATH="$p/share/info:${INFOPATH:-}"
 }
 
+# pyenv shims back to the front. ~/.zshenv put them first, but /etc/zprofile
+# (path_helper) and the Homebrew block above both run later and push them behind
+# /usr/bin and Homebrew, so `python3` ignored .python-version in login shells.
+# fnm runs next and prepends node, so node still comes first. `typeset -U` in
+# ~/.zshenv removes the old entry.
+[[ -d ${PYENV_ROOT:=$HOME/.pyenv}/shims ]] && path=($PYENV_ROOT/shims $path)
+
 # fnm: put node on PATH eagerly here (login shells) so non-interactive/agent
 # shells spawned by IDEs (Cursor, Claude Code) get node too — not just
 # interactive terminals. This must NOT be deferred: zsh-defer only fires on

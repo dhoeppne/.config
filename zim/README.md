@@ -15,9 +15,6 @@ Defers execution of a command until the line editor is idle. This is the engine 
 the "instant prompt, load the rest in the background" setup — `.zshrc` sources its plugin
 file directly and uses it to defer everything else.
 
-#### `duration-info`
-Displays the duration of the last command, for use in the prompt.
-
 #### `zsh-users/zsh-completions`
 Extra completion definitions for many commands and tools (added via `--fpath src`).
 
@@ -29,9 +26,6 @@ Integrates [bat](https://github.com/sharkdp/bat) as the pager / `man` colorizer.
 
 #### `hlissner/zsh-autopair`
 Auto-closes brackets and quotes as you type.
-
-#### `romkatv/zsh-prompt-benchmark`
-Benchmarks prompt latency (`zsh-prompt-benchmark`), useful for tuning.
 
 #### `zsh-users/zsh-history-substring-search`
 Search history by substring with the up/down arrows (bindings set in `.zshrc`).
@@ -45,10 +39,6 @@ Real-time syntax highlighting of the command line.
 
 #### `qoomon/zsh-lazyload`
 Provides `lazyload`, used in `.zshrc` to defer `pyenv` init until first use.
-
-#### `goarano/zsh-lazy-load`
-Provides `_lazy_load`, used in `.zshrc` to defer `rustup` completion generation until
-first use.
 
 #### `zshzoo/magic-enter`
 Runs a default command on a bare Enter at an empty prompt (`git status` in a repo,

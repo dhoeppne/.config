@@ -4,7 +4,7 @@
 # in the background. The EAGER section below is all that runs before the first
 # prompt paints (shell options, PATH, aliases, functions, starship). Everything
 # else is queued with `zsh-defer` and runs once zle goes idle — so you can start
-# typing immediately and the rest (Zim plugins, completion, fnm, fzf) streams in
+# typing immediately and the rest (Zim plugins, completion, fzf) streams in
 # a few milliseconds later.
 
 export XDG_CONFIG_HOME=$HOME/.config
@@ -21,8 +21,17 @@ fi
 # ============================================================================
 # EAGER · core shell behaviour
 # ============================================================================
+# History. Without these, macOS /etc/zshrc limits apply (2000 in memory, 1000 saved).
+HISTFILE=$HOME/.zsh_history
+HISTSIZE=50000
+SAVEHIST=50000
 setopt HIST_IGNORE_ALL_DUPS          # drop older dupes when a new dupe is added
-bindkey -e                           # emacs keymap for line editing
+setopt EXTENDED_HISTORY              # save start time and duration of each command
+setopt SHARE_HISTORY                 # write each command at once; tabs read each other's
+setopt HIST_IGNORE_SPACE             # a command with a leading space is not saved
+setopt HIST_REDUCE_BLANKS            # remove extra blanks before saving
+setopt HIST_VERIFY                   # `!!` and other expansions load the line, not run it
+bindkey -e                          # emacs keymap for line editing
 WORDCHARS=${WORDCHARS//[\/]}         # treat "/" as a word boundary (Ctrl-W)
 ZSH_AUTOSUGGEST_MANUAL_REBIND=1      # autosuggestions is last; skip per-precmd rebind
 
@@ -30,7 +39,7 @@ ZSH_AUTOSUGGEST_MANUAL_REBIND=1      # autosuggestions is last; skip per-precmd 
 # these completions get picked up. `typeset -gU` keeps fpath deduped across
 # `exec zsh` (the `newz` reload function).
 typeset -gU fpath
-[[ -d /Users/david/.zsh/completions ]] && fpath=(/Users/david/.zsh/completions $fpath)
+[[ -d $HOME/.zsh/completions ]]        && fpath=($HOME/.zsh/completions $fpath)
 [[ -d $HOME/.docker/completions ]]     && fpath=($HOME/.docker/completions $fpath)
 
 # ============================================================================
@@ -50,7 +59,18 @@ case ":$PATH:" in
   *) export PATH="$PNPM_HOME:$PATH" ;;
 esac
 
-export EDITOR='vi'
+# Editor: Cursor (waits until the tab closes, so `git commit` works). Falls back to
+# nvim, then vi, when the Cursor CLI is missing or the session is over SSH.
+# `command -v`, not $commands: after the `rehash` in `fnm env` (~/.zprofile), a
+# $commands lookup rescans every PATH folder (~5 ms).
+if [[ -z $SSH_CONNECTION ]] && command -v cursor >/dev/null; then
+  export EDITOR='cursor --wait'
+elif command -v nvim >/dev/null; then
+  export EDITOR=nvim
+else
+  export EDITOR=vi
+fi
+export VISUAL=$EDITOR
 export STARSHIP_CONFIG=~/.config/starship/starship.toml
 
 # fnm eagerly (node on PATH). Interactive shells reach here but skip ~/.zprofile
@@ -201,15 +221,12 @@ _zshrc_after_zim() {
   zstyle ':fzf-tab:*' switch-group '<' '>'
 
   # magic-enter: bare Enter runs git status (in a repo) or a dir listing.
-  MAGIC_ENTER_GIT_COMMAND='git status -u .'
-  MAGIC_ENTER_OTHER_COMMAND='ls -lha .'
   zstyle ':zshzoo:magic-enter' command 'ls -lha .'
   zstyle ':zshzoo:magic-enter' git-command 'g status -u .'
 
-  # Lazy env managers (functions provided by the Zim lazy-load modules above):
-  # pyenv/rustup only initialise on first actual use.
-  command -v lazyload   >/dev/null && lazyload pyenv -- 'eval "$(pyenv init -)"'
-  command -v _lazy_load >/dev/null && _lazy_load rustup "rustup completions zsh > ~/.zfunc/_rustup"
+  # Lazy pyenv (`lazyload` comes from the qoomon/zsh-lazyload Zim module):
+  # `pyenv init` runs only on first actual use.
+  command -v lazyload >/dev/null && lazyload pyenv -- 'eval "$(pyenv init -)"'
 
   # bun completions, if bun is installed.
   [[ -s "$BUN_INSTALL/_bun" ]] && source "$BUN_INSTALL/_bun"
@@ -226,9 +243,10 @@ zsh-defer -c 'source <(fzf --zsh)'
 #     `z` alias stays pointed at zellij.
 zsh-defer -c 'eval "$(zoxide init zsh --cmd cd)"'
 
-# 4) fnm (a faster nvm): initialized eagerly in ~/.zprofile instead of here, so
-#    non-interactive/agent shells (Cursor, Claude Code) get node on PATH too.
-#    zsh-defer only fires on ZLE idle, which never happens for `zsh -c`.
+# 4) fnm (a faster nvm) is NOT deferred. It runs eagerly in two places:
+#    ~/.zprofile for login shells, and the EAGER PATH section above for
+#    interactive non-login shells. `_FNM_ENV_LOADED` keeps it to one run per
+#    shell. zsh-defer only fires on ZLE idle, which never happens for `zsh -c`.
 
 # 5) Startup-only housekeeping.
 _zshrc_housekeeping() {
